@@ -1,13 +1,11 @@
 from bs4 import BeautifulSoup
 import requests as rq
-import re
 
-URL = "https://github.com/selcukemreozer/English-Playground/blob/main/README.md"
+URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/a1.txt"
 page = rq.get(URL)
 
 soup = BeautifulSoup(page.content, 'html.parser')
-results = soup.findAll("div", {"id":"readme"})
-results = str(results)
+results = soup.findAll("td", {"id":"LC1"})
 print(results)
 list_ = list()
 
