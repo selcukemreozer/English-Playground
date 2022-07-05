@@ -29,7 +29,7 @@ def RAKES_BankaDuzenleyici(results_):
     return  kelimeListesi
 
 
-def secenek_Belirleyici(kelimeBankasi):
+def secenekBelirleyici(kelimeBankasi):
     """
     Burası biraz kafa karışıklığına sebep olabiliyor. En azından benim kafam karıştı.
     O yüzden bu açıklamayı yazıyorum.
@@ -57,8 +57,7 @@ def secenek_Belirleyici(kelimeBankasi):
     :return:
     """
     secim_ = rd.choice(kelimeBankasi)
-    ingilizceKelime = secim_.split(':')[0]
-    turkcesi = secim_.split(':')[1]
+    ingilizceKelime, turkcesi = secim_.split(':')
 
     digerSecenek1 = rd.choice(kelimeBankasi)
     digerSecenek2 = rd.choice(kelimeBankasi)
@@ -101,12 +100,12 @@ def interface():
     pencere.resizable(False, False)
     pencere.title('English-Playground')
     pencere.geometry('500x500+710+290')
-    pencere.columnconfigure(0, weight=2)
-    pencere.columnconfigure(1, weight=2)
-    pencere.columnconfigure(2, weight=2)
+    pencere.columnconfigure(0, weight=1)
+    pencere.columnconfigure(1, weight=1)
+    pencere.columnconfigure(2, weight=1)
 
     kelimeBankasi = RAKES_BankaDuzenleyici(results)
-    secenekler = secenek_Belirleyici(kelimeBankasi)
+    secenekler = secenekBelirleyici(kelimeBankasi)
     print(kelimeBankasi)
     print(secenekler)
     mainloop()
