@@ -80,33 +80,19 @@ def secenekBelirleyici(kelimeBankasi):
 
     return [ingilizceKelime, turkcesi, digerSecenek1, digerSecenek2]
 
-
-
-"""
-print(kelimeBankasi[0])
-print(kelimeBankasi[1])
-# Ör.["apple:elma", "car:araba"]
-secim = rd.choice(kelimeBankasi[1])  # rastgele bir kelime veanlamı seçiliyor
-
-cevap = input(secim.split(":")[0] + ">")  # seçilen kelime gösterilip anlamı soruluyor
-
-if cevap == secim.split(":")[1]:
-    print("doğru")
-"""
-
 ########################       tkinter      ########################
-
 
 def interface():
 
-    def ekipman ():
+    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
+    def ekipman():
         global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
         # global değişkene ihtiyaç duydum çünkü fonksiyonu tuşla çağırdığımız için
         # return değişkenleri saklamanın yolunu bulamadım
 
         kelimeBankasi = RAKES_BankaDuzenleyici(results)
         secenekler = secenekBelirleyici(kelimeBankasi)
-        
+
         try:
             if oncekiKelime_ == secenekler[0]:
                 print(f"tekrar:{oncekiKelime_}:{secenekler[0]}")
@@ -118,6 +104,23 @@ def interface():
                 print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}")
                 oncekiKelime_ = secenekler[0]
 
+                butonNo = rd.randint(1, 3)
+
+                if butonNo == 1:
+                    buton1.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
+                    buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
+                    buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
+
+                elif butonNo == 2:
+                    buton1.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
+                    buton2.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
+                    buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
+
+                else:
+                    buton1.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
+                    buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
+                    buton3.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
+
         except NameError:
             # global değişkene ilk seferde bir şey atayamazdım çünkü fonksiyon çağrıldığında
             # hep aynı atama gerçekleşecekti(örn. oncekiKelime_ = "") ve değişken görevini
@@ -127,9 +130,7 @@ def interface():
             # oncekiKelime_ ilk değerini kazandıktan sonra özyinelme ile tekrar bir değer
             # ataması gerçekleşiyor
 
-
-
-        return secenekler
+    #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 
     pencere = Tk()
     pencere.resizable(False, False)
@@ -142,10 +143,16 @@ def interface():
     soru = Label(pencere, text = "")
     soru.grid(column = 1, row = 0)
     print(soru)
-    ekipman()
-    degisitrButonu = Button(pencere, text = "degistir", command = ekipman)
 
-    degisitrButonu.grid(column = 0, row = 3)
+    buton1 = Button(pencere, text = "")
+    buton2 = Button(pencere, text = "")
+    buton3 = Button(pencere, text = "")
+    degisitrButonu = Button(pencere, text = "degistir", command = ekipman)
+    degisitrButonu.grid(column = 0, row = 1)
+    buton1.grid(column = 0, row = 2)
+    buton2.grid(column = 0, row = 3)
+    buton3.grid(column = 0, row = 4)
+    ekipman()
     mainloop()
 
 interface()
