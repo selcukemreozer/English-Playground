@@ -36,7 +36,7 @@ def secenekBelirleyici(kelimeBankasi):
     :param kelimeBankasi: her kelimenin anlamıyla birlikte tek bir string eleman olduğu
     bir liste.
 
-    Aşağıda 'secim_ = rd.choice(kelimeBankasi)' satırında split kullanmayıp aşağı iki
+    Aşağıda 'secim_ = rd.choice(kelimeBankasi)' satırında split kullanmayıp aşağı
     satırda kullanma sebebim
     secim_ = 'kelime:turkcesi'
     şeklinde kalmalı çünkü 'while'döngüsünde karşılaştırmaya giriyor.
@@ -95,7 +95,42 @@ if cevap == secim.split(":")[1]:
 """
 
 ########################       tkinter      ########################
+
+
 def interface():
+
+    def ekipman ():
+        global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
+        # global değişkene ihtiyaç duydum çünkü fonksiyonu tuşla çağırdığımız için
+        # return değişkenleri saklamanın yolunu bulamadım
+
+        kelimeBankasi = RAKES_BankaDuzenleyici(results)
+        secenekler = secenekBelirleyici(kelimeBankasi)
+        
+        try:
+            if oncekiKelime_ == secenekler[0]:
+                print(f"tekrar:{oncekiKelime_}:{secenekler[0]}")
+                ekipman()
+                # önceki kelime ile yeni kelime aynı ise özyineleme ile
+                # tekrar yeni bir kelime çekiliyor
+            else:
+                soru.config(text=secenekler[0])
+                print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}")
+                oncekiKelime_ = secenekler[0]
+
+        except NameError:
+            # global değişkene ilk seferde bir şey atayamazdım çünkü fonksiyon çağrıldığında
+            # hep aynı atama gerçekleşecekti(örn. oncekiKelime_ = "") ve değişken görevini
+            # yerine getiremeyecekti.
+            oncekiKelime_ = ""
+            ekipman()
+            # oncekiKelime_ ilk değerini kazandıktan sonra özyinelme ile tekrar bir değer
+            # ataması gerçekleşiyor
+
+
+
+        return secenekler
+
     pencere = Tk()
     pencere.resizable(False, False)
     pencere.title('English-Playground')
@@ -104,10 +139,13 @@ def interface():
     pencere.columnconfigure(1, weight=1)
     pencere.columnconfigure(2, weight=1)
 
-    kelimeBankasi = RAKES_BankaDuzenleyici(results)
-    secenekler = secenekBelirleyici(kelimeBankasi)
-    print(kelimeBankasi)
-    print(secenekler)
+    soru = Label(pencere, text = "")
+    soru.grid(column = 1, row = 0)
+    print(soru)
+    ekipman()
+    degisitrButonu = Button(pencere, text = "degistir", command = ekipman)
+
+    degisitrButonu.grid(column = 0, row = 3)
     mainloop()
 
 interface()
