@@ -13,7 +13,8 @@ __Çalışma Mantığı:__ Araç, seçtiğiniz seviyeye göre hazırda bulunan k
 Şu an **_github_** üzerinden web kazıma mümkün mü bilmiyorum ama eğer mümkünse kelime bankaları bu depoda tutulacak ve araç kellimelere buradan erişecek. Bu şekilde tasarlamamın amacı kelime bankalarına gelen güncellemelerin daha rahat yapılabilmesi ve kullanıcıyı güncelleme takip etmeyle uğraştırmamaktır. 
 
 ## RAKES İçin Hedefler ve Gelecek Özellikler
-- [ ] Arayüz inşa et
+- [x] Arayüz inşa et
 - [ ] Kullanıcının kendi kelime bankasını oluşturabilmesi 
     - [ ] ve yerel hafızada tutabilmesi  
     - [ ] ve sisteme yükleyebilmesi
+- [ ] puanlama sistemi geliştir
