@@ -104,16 +104,19 @@ def interface():
 
         kelimeBankasi = RAKES_BankaDuzenleyici(results)
         secenekler = secenekBelirleyici(kelimeBankasi)
+        dogruCevap = secenekler[1]
+        secenek1 = secenekler[2].split(':')[1]
+        secenek2 = secenekler[3].split(':')[1]
 
         try:
             if oncekiKelime_ == secenekler[0]:
-                print(f"tekrar:{oncekiKelime_}:{secenekler[0]}")
+                # print(f"tekrar:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
                 ekipman()
                 # önceki kelime ile yeni kelime aynı ise özyineleme ile
                 # tekrar yeni bir kelime çekiliyor
             else:
                 soru.config(text=secenekler[0])
-                print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}")
+                # print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
                 oncekiKelime_ = secenekler[0]
                 oncekiDogruCevap = secenekler[0]+">>"+secenekler[1]
 
@@ -121,21 +124,21 @@ def interface():
 
                 if butonNo == 1:
                     butonHafiza = 1
-                    buton1.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
-                    buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
-                    buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
+                    buton1.config(text=dogruCevap)  # cevap(sorulan ingilizce kelimenin türkçesi)
+                    buton2.config(text=secenek1)  # diger secenek 1'in türkçesi
+                    buton3.config(text=secenek2)  # diger secenek 2'nin türkçesi
 
                 elif butonNo == 2:
                     butonHafiza = 2
-                    buton1.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
-                    buton2.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
-                    buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
+                    buton1.config(text=secenek1)  # diger secenek 1'in türkçesi
+                    buton2.config(text=dogruCevap)  # cevap(sorulan ingilizce kelimenin türkçesi)
+                    buton3.config(text=secenek2)  # diger secenek 2'nin türkçesi
 
                 else:
                     butonHafiza = 3
-                    buton1.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
-                    buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
-                    buton3.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
+                    buton1.config(text=secenek2)  # diger secenek 2'nin türkçesi
+                    buton2.config(text=secenek1)  # diger secenek 1'in türkçesi
+                    buton3.config(text=dogruCevap)  # cevap(sorulan ingilizce kelimenin türkçesi)
 
         except NameError:
             # global değişkene ilk seferde bir şey atayamazdım çünkü fonksiyon çağrıldığında
@@ -151,20 +154,20 @@ def interface():
     pencere = Tk()
     pencere.resizable(False, False)
     pencere.title('English-Playground')
-    pencere.geometry('500x500+710+290')
+    pencere.geometry('700x500+710+290')
     pencere.columnconfigure(0, weight=1)
     pencere.columnconfigure(1, weight=1)
     pencere.columnconfigure(2, weight=1)
 
-    soru = Label(pencere, text = "")
-    soru.grid(column = 1, row = 0)
+    soru = Label(pencere, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
+    soru.grid(column = 1, row = 0, padx = 30, pady = 30)
 
-    dogruYanlis = Label(pencere, text = "")
-    dogruYanlis.grid(column = 0, row = 2, padx = 10, pady = 10)
+    dogruYanlis = Label(pencere, text = "", font = ("Arial", 15))
+    dogruYanlis.grid(column = 1, row = 2, padx = 10, pady = 10)
 
-    buton1 = Button(pencere, text = "", command = lambda: ekipman(1))
-    buton2 = Button(pencere, text = "", command = lambda: ekipman(2))
-    buton3 = Button(pencere, text = "", command = lambda: ekipman(3))
+    buton1 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(1))
+    buton2 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(2))
+    buton3 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(3))
 
     buton1.grid(column = 0, row = 1)
     buton2.grid(column = 1, row = 1)
