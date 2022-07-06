@@ -85,7 +85,7 @@ def secenekBelirleyici(kelimeBankasi):
 def interface():
 
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    def ekipman(cevap_butonNo = 0):
+    def paket(cevap_butonNo = 0):
         global oncekiDogruCevap
         global butonHafiza
         global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
@@ -111,7 +111,7 @@ def interface():
         try:
             if oncekiKelime_ == secenekler[0]:
                 # print(f"tekrar:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
-                ekipman()
+                paket()
                 # önceki kelime ile yeni kelime aynı ise özyineleme ile
                 # tekrar yeni bir kelime çekiliyor
             else:
@@ -145,7 +145,7 @@ def interface():
             # hep aynı atama gerçekleşecekti(örn. oncekiKelime_ = "") ve değişken görevini
             # yerine getiremeyecekti.
             oncekiKelime_ = ""
-            ekipman()
+            paket()
             # oncekiKelime_ ilk değerini kazandıktan sonra özyinelme ile tekrar bir değer
             # ataması gerçekleşiyor
 
@@ -165,14 +165,14 @@ def interface():
     dogruYanlis = Label(pencere, text = "", font = ("Arial", 15))
     dogruYanlis.grid(column = 1, row = 2, padx = 10, pady = 10)
 
-    buton1 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(1))
-    buton2 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(2))
-    buton3 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: ekipman(3))
+    buton1 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(1))
+    buton2 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(2))
+    buton3 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(3))
 
     buton1.grid(column = 0, row = 1)
     buton2.grid(column = 1, row = 1)
     buton3.grid(column = 2, row = 1)
-    ekipman()
+    paket()
     mainloop()
 
 interface()
