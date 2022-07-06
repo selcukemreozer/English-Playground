@@ -85,10 +85,22 @@ def secenekBelirleyici(kelimeBankasi):
 def interface():
 
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    def ekipman():
+    def ekipman(cevap_butonNo = 0):
+        global oncekiDogruCevap
+        global butonHafiza
         global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
         # global değişkene ihtiyaç duydum çünkü fonksiyonu tuşla çağırdığımız için
         # return değişkenleri saklamanın yolunu bulamadım
+
+        try:
+            if butonHafiza == cevap_butonNo:
+                dogruYanlis.config(text = "doğru bildin!")
+
+            else:
+                dogruYanlis.config(text = oncekiDogruCevap)
+        except NameError:
+            dogruYanlis.config()
+            butonHafiza = -1
 
         kelimeBankasi = RAKES_BankaDuzenleyici(results)
         secenekler = secenekBelirleyici(kelimeBankasi)
@@ -103,20 +115,24 @@ def interface():
                 soru.config(text=secenekler[0])
                 print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}")
                 oncekiKelime_ = secenekler[0]
+                oncekiDogruCevap = secenekler[0]+">>"+secenekler[1]
 
                 butonNo = rd.randint(1, 3)
 
                 if butonNo == 1:
+                    butonHafiza = 1
                     buton1.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
                     buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
                     buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
 
                 elif butonNo == 2:
+                    butonHafiza = 2
                     buton1.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
                     buton2.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
                     buton3.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
 
                 else:
+                    butonHafiza = 3
                     buton1.config(text=secenekler[3].split(':')[1])  # diger secenek 2'nin türkçesi
                     buton2.config(text=secenekler[2].split(':')[1])  # diger secenek 1'in türkçesi
                     buton3.config(text=secenekler[1])  # cevap(sorulan ingilizce kelimenin türkçesi)
@@ -142,16 +158,17 @@ def interface():
 
     soru = Label(pencere, text = "")
     soru.grid(column = 1, row = 0)
-    print(soru)
 
-    buton1 = Button(pencere, text = "")
-    buton2 = Button(pencere, text = "")
-    buton3 = Button(pencere, text = "")
-    degisitrButonu = Button(pencere, text = "degistir", command = ekipman)
-    degisitrButonu.grid(column = 0, row = 1)
-    buton1.grid(column = 0, row = 2)
-    buton2.grid(column = 0, row = 3)
-    buton3.grid(column = 0, row = 4)
+    dogruYanlis = Label(pencere, text = "")
+    dogruYanlis.grid(column = 0, row = 2, padx = 10, pady = 10)
+
+    buton1 = Button(pencere, text = "", command = lambda: ekipman(1))
+    buton2 = Button(pencere, text = "", command = lambda: ekipman(2))
+    buton3 = Button(pencere, text = "", command = lambda: ekipman(3))
+
+    buton1.grid(column = 0, row = 1)
+    buton2.grid(column = 1, row = 1)
+    buton3.grid(column = 2, row = 1)
     ekipman()
     mainloop()
 
