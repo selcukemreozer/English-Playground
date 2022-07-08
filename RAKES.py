@@ -3,34 +3,41 @@ import requests as rq
 import random as rd
 from tkinter import *
 
-######################## bs4, requests, url ########################
-URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/a1.txt"
-try:
-    page = rq.get(URL)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    results = soup.findAll("td", {"id": "LC1"})
 
-    results = str(results)
+def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
-except rq.exceptions.ConnectionError:
-    print("internet bağlantısı yok")
+    ######################## bs4, requests, url ########################
+    if tip == "hazir":
+        URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/" + kelime_bankasi_ismi+".txt"
 
+        try:
+            page = rq.get(URL)
+            soup = BeautifulSoup(page.content, 'html.parser')
+            results = soup.findAll("td", {"id": "LC1"})
 
+            results = str(results)
 
-####################################################################
-def RAKES_BankaDuzenleyici(results_):
-    for each in range(len(results_)):  # gereksiz html parçalarını ayıklıyor ve sadece kelimeler kalıyor.
-        # (Bilmiyorum sanki daha mantıklı ve kullanışlı bir yolu varmış gibi geliyor.)
+            for each in range(len(results)):  # gereksiz html parçalarını ayıklıyor ve sadece kelimeler kalıyor.
+                # (Bilmiyorum sanki daha mantıklı ve kullanışlı bir yolu varmış gibi geliyor.)
 
-        if results_[each] == ">":
-            for each2 in range(len(results_[each:])):
+                if results[each] == ">":
+                    for each2 in range(len(results[each:])):
 
-                if results_[each2 + each] == "<":
-                    tum_kelimeler = results_[each + 1:each2 + each]  # tüm ing ve tr kelimeler str halinde tek parça
-                    kelimeListesi = tum_kelimeler.split(',')  # her kelimenin ing ve trsi bir eleman olacak şekilde  listeleme
+                        if results[each2 + each] == "<":
+                            tum_kelimeler = results[each + 1:each2 + each]  # tüm ing ve tr kelimeler str halinde tek parça
+                            # her kelimenin ing ve trsi bir eleman olacak şekilde  listeleme
+                            break
                     break
-            break
 
+        except rq.exceptions.ConnectionError:
+            print("internet bağlantısı yok")
+    else:
+        results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+",encoding="utf-8")
+        tum_kelimeler = results.read()
+    ####################################################################
+    print(str(tum_kelimeler))
+    kelimeListesi = str(tum_kelimeler).split(',')
+    print(kelimeListesi)
     return  kelimeListesi
 
 
@@ -87,10 +94,13 @@ def secenekBelirleyici(kelimeBankasi):
 
 ########################       tkinter      ########################
 
-def interface():
+def interface(tip, kelimeBankasi_ismi):
+    kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)
+    secenekler = secenekBelirleyici(kelimeBankasi)
 
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    def paket(cevap_butonNo = 0):
+    def paket(cevap_butonNo = 0): # kısım1'de paket alacak bir cevap_butonNo değerine sahip değildir o yüzden
+                                  # varsayılan bir değere(0) ihtiyaç vardır.
         global oncekiDogruCevap
         global butonHafiza
         global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
@@ -100,30 +110,28 @@ def interface():
         try:
             if butonHafiza == cevap_butonNo:
                 dogruYanlis.config(text = "doğru bildin!")
-
             else:
                 dogruYanlis.config(text = oncekiDogruCevap)
+
         except NameError:
             dogruYanlis.config()
             butonHafiza = -1
 
-        kelimeBankasi = RAKES_BankaDuzenleyici(results)
-        secenekler = secenekBelirleyici(kelimeBankasi)
         dogruCevap = secenekler[1]
         secenek1 = secenekler[2].split(':')[1]
         secenek2 = secenekler[3].split(':')[1]
 
         try:
-            if oncekiKelime_ == secenekler[0]:
+            if oncekiKelime_ == secenekler[0]: # kısım1
                 # print(f"tekrar:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
                 paket()
                 # önceki kelime ile yeni kelime aynı ise özyineleme ile
                 # tekrar yeni bir kelime çekiliyor
             else:
-                soru.config(text=secenekler[0])
+                soru.config(text = secenekler[0])
                 # print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
                 oncekiKelime_ = secenekler[0]
-                oncekiDogruCevap = secenekler[0]+">>"+secenekler[1]
+                oncekiDogruCevap = secenekler[0]+" >> "+secenekler[1]
 
                 butonNo = rd.randint(1, 3)
 
@@ -155,24 +163,29 @@ def interface():
             # ataması gerçekleşiyor
 
     #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
+    bankaSecimPenceresi = Tk()
+    bankaSecimPenceresi.resizable(False, False)
+    bankaSecimPenceresi.title('RAKES')
+    bankaSecimPenceresi.geometry('700x500+710+290')
+    bankaSecimPenceresi.columnconfigure(0, weight=1)
 
-    pencere = Tk()
-    pencere.resizable(False, False)
-    pencere.title('English-Playground')
-    pencere.geometry('700x500+710+290')
-    pencere.columnconfigure(0, weight=1)
-    pencere.columnconfigure(1, weight=1)
-    pencere.columnconfigure(2, weight=1)
+    soruPenceresi = Tk()
+    soruPenceresi.resizable(False, False)
+    soruPenceresi.title('English-Playground')
+    soruPenceresi.geometry('700x500+710+290')
+    soruPenceresi.columnconfigure(0, weight=1)
+    soruPenceresi.columnconfigure(1, weight=1)
+    soruPenceresi.columnconfigure(2, weight=1)
 
-    soru = Label(pencere, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
+    soru = Label(soruPenceresi, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
     soru.grid(column = 1, row = 0, padx = 30, pady = 30)
 
-    dogruYanlis = Label(pencere, text = "", font = ("Arial", 15))
-    dogruYanlis.grid(column = 1, row = 2, padx = 10, pady = 10)
+    dogruYanlis = Label(soruPenceresi, text = "", font = ("Arial", 15))
+    dogruYanlis.grid(column = 1, row = 2, padx = 20, pady = 20)
 
-    buton1 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(1))
-    buton2 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(2))
-    buton3 = Button(pencere, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(3))
+    buton1 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(1))
+    buton2 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(2))
+    buton3 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(3))
 
     buton1.grid(column = 0, row = 1)
     buton2.grid(column = 1, row = 1)
@@ -180,4 +193,4 @@ def interface():
     paket()
     mainloop()
 
-interface()
+interface("hazi", "a1")

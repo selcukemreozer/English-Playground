@@ -1,1 +1,1 @@
-apple:elma,car:araba,pen:kalem,red:kırmızı,blue:mavi,computer:bilgisayar,phone:telefon
+apple:elma,car:araba,pen:kalem,red:kırmızı,blue:mavi,computer:bilgisayar,phone:telefon,fear:korku,glass:cam,two:iki,tree:agac
