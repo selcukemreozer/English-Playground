@@ -5,12 +5,17 @@ from tkinter import *
 
 ######################## bs4, requests, url ########################
 URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/a1.txt"
-page = rq.get(URL)
+try:
+    page = rq.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    results = soup.findAll("td", {"id": "LC1"})
 
-soup = BeautifulSoup(page.content, 'html.parser')
-results = soup.findAll("td", {"id": "LC1"})
+    results = str(results)
 
-results = str(results)
+except rq.exceptions.ConnectionError:
+    print("internet bağlantısı yok")
+
+
 
 ####################################################################
 def RAKES_BankaDuzenleyici(results_):
