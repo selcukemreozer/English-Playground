@@ -95,12 +95,13 @@ def secenekBelirleyici(kelimeBankasi):
 ########################       tkinter      ########################
 
 def interface(tip, kelimeBankasi_ismi):
-    kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)
-    secenekler = secenekBelirleyici(kelimeBankasi)
+
 
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
     def paket(cevap_butonNo = 0): # kısım1'de paket alacak bir cevap_butonNo değerine sahip değildir o yüzden
-                                  # varsayılan bir değere(0) ihtiyaç vardır.
+        kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)
+        secenekler = secenekBelirleyici(kelimeBankasi)
+        # varsayılan bir değere(0) ihtiyaç vardır.
         global oncekiDogruCevap
         global butonHafiza
         global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
