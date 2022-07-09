@@ -32,14 +32,12 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         except rq.exceptions.ConnectionError:
             print("internet bağlantısı yok")
     else:
-        results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+",encoding="utf-8")
+        results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
         tum_kelimeler = results.read()
-    ####################################################################
-    print(str(tum_kelimeler))
-    kelimeListesi = str(tum_kelimeler).split(',')
-    print(kelimeListesi)
-    return  kelimeListesi
 
+    kelimeListesi = tum_kelimeler.split(',')
+    return kelimeListesi
+    ####################################################################
 
 def secenekBelirleyici(kelimeBankasi):
     """
@@ -169,10 +167,20 @@ def interface(tip, kelimeBankasi_ismi):
     bankaSecimPenceresi.title('RAKES')
     bankaSecimPenceresi.geometry('700x500+710+290')
     bankaSecimPenceresi.columnconfigure(0, weight=1)
+    bankaSecimPenceresi.columnconfigure(1, weight=1)
+    bankaSecimPenceresi.columnconfigure(2, weight=2)
+    a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20))
+    a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20))
+    b1Buton = Button(bankaSecimPenceresi, text="b1", font=("Arial", 20))
+    b2Buton = Button(bankaSecimPenceresi, text="b2", font=("Arial", 20))
+    c1Buton = Button(bankaSecimPenceresi, text="c1", font=("Arial", 20))
+    c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20))
+
+    a1Buton.grid(column=0)
 
     soruPenceresi = Tk()
     soruPenceresi.resizable(False, False)
-    soruPenceresi.title('English-Playground')
+    soruPenceresi.title('RAKES')
     soruPenceresi.geometry('700x500+710+290')
     soruPenceresi.columnconfigure(0, weight=1)
     soruPenceresi.columnconfigure(1, weight=1)
