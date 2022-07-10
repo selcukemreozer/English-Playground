@@ -1,16 +1,22 @@
+#$$ en son configKontrolcu inşa ediyordun. >> paket() çağırdığında defalarca aynı hatayı vermesin diye
+#$$ aşağıda hata değişkenine ilk atamayı yapmak için paket() çağrılıyor o sırada defalarca hata alıyor
 from bs4 import BeautifulSoup
 import requests as rq
 import random as rd
 from tkinter import *
+from tkinter import messagebox
 
 
 def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
     ######################## bs4, requests, url ########################
-    if tip == "hazir":
-        URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/" + kelime_bankasi_ismi+".txt"
+    global hata # program herhangi bir hata ile karşılaştığında gerekli yerlerin çalışmasını durdurucak
 
-        try:
+    try:
+        hata = True
+
+        if tip == "hazir":
+            URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/" + kelime_bankasi_ismi+".txt"
             page = rq.get(URL)
             soup = BeautifulSoup(page.content, 'html.parser')
             results = soup.findAll("td", {"id": "LC1"})
@@ -29,14 +35,26 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
                             break
                     break
 
-        except rq.exceptions.ConnectionError:
-            print("internet bağlantısı yok")
-    else:
-        results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
-        tum_kelimeler = results.read()
 
-    kelimeListesi = tum_kelimeler.split(',')
-    return kelimeListesi
+        elif tip=="topluluk":
+            results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
+            tum_kelimeler = results.read()
+
+
+
+        else:
+            pass
+
+        kelimeListesi = tum_kelimeler.split(',')
+        return kelimeListesi
+
+    except FileNotFoundError:
+        messagebox.showwarning(title="HATA!", message="Aradığınız dosya bulunamadı!")
+        hata = False
+
+    except rq.exceptions.ConnectionError:
+        messagebox.showerror(title="Bağlantı Hatası!", message="İnternet baplantısı sağlanamadı!")
+        hata = False
     ####################################################################
 
 def secenekBelirleyici(kelimeBankasi):
@@ -89,31 +107,71 @@ def secenekBelirleyici(kelimeBankasi):
             break
 
     return [ingilizceKelime, turkcesi, digerSecenek1, digerSecenek2]
+####################################################################
 
 ########################       tkinter      ########################
+def bankaSecimPenceresi():
+    global hata
 
-def interface(tip, kelimeBankasi_ismi):
+    bankaSecimPenceresi = Tk()
+    bankaSecimPenceresi.resizable(False, False)
+    bankaSecimPenceresi.title('RAKES')
+    bankaSecimPenceresi.geometry('700x500+710+290')
+    bankaSecimPenceresi.columnconfigure(0, weight=1)
+    bankaSecimPenceresi.columnconfigure(1, weight=1)
+    bankaSecimPenceresi.columnconfigure(2, weight=2)
 
+    a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "a1"), bankaSecimPenceresi.destroy()])
 
+    a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "a2"), bankaSecimPenceresi.destroy()])
+
+    b1Buton = Button(bankaSecimPenceresi, text="b1", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "b1"), bankaSecimPenceresi.destroy()])
+
+    b2Buton = Button(bankaSecimPenceresi, text="b2", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "b2"), bankaSecimPenceresi.destroy()])
+
+    c1Buton = Button(bankaSecimPenceresi, text="c1", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "c1"), bankaSecimPenceresi.destroy()])
+
+    c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20),
+                     command=lambda: [bisi("topluluk", "c2"), bankaSecimPenceresi.destroy()])
+
+    a1Buton.grid(column=0, row=0, sticky=E, padx=5, pady=50)
+    a2Buton.grid(column=1, row=0, sticky=W, padx=5, pady=50)
+    b1Buton.grid(column=0, row=1, sticky=E, padx=5, pady=5)
+    b2Buton.grid(column=1, row=1, sticky=W, padx=5, pady=5)
+    c1Buton.grid(column=0, row=2, sticky=E, padx=5, pady=50)
+    c2Buton.grid(column=1, row=2, sticky=W, padx=5, pady=50)
+
+def soruPenceresi(tip, kelimeBankasi_ismi):
+    global hata
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    def paket(cevap_butonNo = 0): # kısım1'de paket alacak bir cevap_butonNo değerine sahip değildir o yüzden
-        kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)
-        secenekler = secenekBelirleyici(kelimeBankasi)
-        # varsayılan bir değere(0) ihtiyaç vardır.
+    def paket(cevap_butonNo = 0, configKontrolcu = True): # kısım1'de paket alacak bir cevap_butonNo değerine sahip değildir
+                                  # o yüzden cevap_butonNo = 0
         global oncekiDogruCevap
         global butonHafiza
-        global oncekiKelime_ # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
+        global oncekiKelime_  # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
         # global değişkene ihtiyaç duydum çünkü fonksiyonu tuşla çağırdığımız için
         # return değişkenleri saklamanın yolunu bulamadım
 
+
+        # if hata:
+
+
         try:
-            if butonHafiza == cevap_butonNo:
+            kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)
+            secenekler = secenekBelirleyici(kelimeBankasi)
+            if butonHafiza == cevap_butonNo and configKontrolcu:
                 dogruYanlis.config(text = "doğru bildin!")
-            else:
+            elif configKontrolcu:
                 dogruYanlis.config(text = oncekiDogruCevap)
+            else:
+                pass
 
         except NameError:
-            dogruYanlis.config()
             butonHafiza = -1
 
         dogruCevap = secenekler[1]
@@ -122,10 +180,11 @@ def interface(tip, kelimeBankasi_ismi):
 
         try:
             if oncekiKelime_ == secenekler[0]: # kısım1
-                # print(f"tekrar:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
-                paket()
                 # önceki kelime ile yeni kelime aynı ise özyineleme ile
                 # tekrar yeni bir kelime çekiliyor
+                # print(f"tekrar:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
+                paket()
+
             else:
                 soru.config(text = secenekler[0])
                 # print(f"şimdi oldu:{oncekiKelime_}:{secenekler[0]}") >> KONTROL SİSTEMİ
@@ -161,45 +220,40 @@ def interface(tip, kelimeBankasi_ismi):
             # oncekiKelime_ ilk değerini kazandıktan sonra özyinelme ile tekrar bir değer
             # ataması gerçekleşiyor
 
+        #else:
+            #pass
     #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    bankaSecimPenceresi = Tk()
-    bankaSecimPenceresi.resizable(False, False)
-    bankaSecimPenceresi.title('RAKES')
-    bankaSecimPenceresi.geometry('700x500+710+290')
-    bankaSecimPenceresi.columnconfigure(0, weight=1)
-    bankaSecimPenceresi.columnconfigure(1, weight=1)
-    bankaSecimPenceresi.columnconfigure(2, weight=2)
-    a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20))
-    a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20))
-    b1Buton = Button(bankaSecimPenceresi, text="b1", font=("Arial", 20))
-    b2Buton = Button(bankaSecimPenceresi, text="b2", font=("Arial", 20))
-    c1Buton = Button(bankaSecimPenceresi, text="c1", font=("Arial", 20))
-    c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20))
+    if hata:
+        # print("hata:",hata)
+        soruPenceresi = Tk()
+        soruPenceresi.resizable(False, False)
+        soruPenceresi.title('RAKES')
+        soruPenceresi.geometry('700x500+710+290')
+        soruPenceresi.columnconfigure(0, weight=1)
+        soruPenceresi.columnconfigure(1, weight=1)
+        soruPenceresi.columnconfigure(2, weight=1)
 
-    a1Buton.grid(column=0)
+        soru = Label(soruPenceresi, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
+        soru.grid(column = 1, row = 0, padx = 30, pady = 30)
 
-    soruPenceresi = Tk()
-    soruPenceresi.resizable(False, False)
-    soruPenceresi.title('RAKES')
-    soruPenceresi.geometry('700x500+710+290')
-    soruPenceresi.columnconfigure(0, weight=1)
-    soruPenceresi.columnconfigure(1, weight=1)
-    soruPenceresi.columnconfigure(2, weight=1)
+        dogruYanlis = Label(soruPenceresi, text = "", font = ("Arial", 15))
+        dogruYanlis.grid(column = 1, row = 2, padx = 20, pady = 20)
 
-    soru = Label(soruPenceresi, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
-    soru.grid(column = 1, row = 0, padx = 30, pady = 30)
+        buton1 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(1))
+        buton2 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(2))
+        buton3 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(3))
 
-    dogruYanlis = Label(soruPenceresi, text = "", font = ("Arial", 15))
-    dogruYanlis.grid(column = 1, row = 2, padx = 20, pady = 20)
+        buton1.grid(column = 0, row = 1)
+        buton2.grid(column = 1, row = 1)
+        buton3.grid(column = 2, row = 1)
+        paket()
 
-    buton1 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(1))
-    buton2 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(2))
-    buton3 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20), command = lambda: paket(3))
+    else:
+        pass
 
-    buton1.grid(column = 0, row = 1)
-    buton2.grid(column = 1, row = 1)
-    buton3.grid(column = 2, row = 1)
-    paket()
-    mainloop()
+def bisi(tip_, bankaAdi_):
+    soruPenceresi(tip_, bankaAdi_)
 
-interface("hazi", "a1")
+bankaSecimPenceresi()
+
+mainloop()
