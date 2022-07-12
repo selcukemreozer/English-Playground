@@ -4,13 +4,12 @@ import random as rd
 from tkinter import *
 from tkinter import messagebox
 from icecream import ic
-sadeceBaslangicta = True
+
+sadeceBaslangicta = True # sadece başlangıçta olması gereken işlemler için oluşturuldu daha kullanılmadı
 def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
     ######################## bs4, requests, url ########################
     global hata # program herhangi bir hata ile karşılaştığında gerekli yerlerin çalışmasını durdurucak
-    global sadeceBaslangicta
-
     tum_kelimeler = str()
 
     try:
@@ -32,7 +31,6 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
                         if results[each2 + each] == "<":
                             tum_kelimeler = results[each + 1:each2 + each]  # tüm ing ve tr kelimeler str halinde tek parça
-                            sadeceBaslangicta = False
                             # her kelimenin ing ve trsi bir eleman olacak şekilde  listeleme
                             break
                     break
@@ -49,12 +47,10 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         elif tip == "topluluk":
             results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
             tum_kelimeler = results.read()
-            sadeceBaslangicta = False
         else:
             pass
 
         kelimeListesi = tum_kelimeler.split(',')
-
         return kelimeListesi
 
     except FileNotFoundError:
