@@ -4,8 +4,7 @@ import random as rd
 from tkinter import *
 from tkinter import messagebox
 from icecream import ic
-
-sadeceBaslangicta = True # sadece başlangıçta olması gereken işlemler için oluşturuldu daha kullanılmadı
+oncekiBanka = [""]
 def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
     ######################## bs4, requests, url ########################
@@ -51,6 +50,8 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
             pass
 
         kelimeListesi = tum_kelimeler.split(',')
+        oncekiBanka.remove(oncekiBanka[0])
+        oncekiBanka.append(kelime_bankasi_ismi)
         return kelimeListesi
 
     except FileNotFoundError:
@@ -161,14 +162,25 @@ def bankaSecimPenceresi():
     c1Buton.grid(column=0, row=2, sticky=E, padx=5, pady=50)
     c2Buton.grid(column=1, row=2, sticky=W, padx=5, pady=50)
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
+               # her ana menüye dönüşte önceki doğru cevabı siliyor. Bu sayede tıklamadığın soruların cevabını görmicen
+    global oncekiDogruCevap
+    del oncekiDogruCevap
 
 def soruPenceresi(tip, kelimeBankasi_ismi):
     global hata
+    global oncekiKelimeBankasi
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
-    kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi)  # bu satır, kısım <if hata:>'nın üstünde
+    if oncekiBanka[0] != kelimeBankasi_ismi: # kullanıcı menuye dönünce tekrar aynı bankayı seçerse web kazıma yapmaz
+        kelimeBankasi = RAKES_bankaDuzenleyici(tip, kelimeBankasi_ismi) # bu satır, kısım <if hata:>'nın üstünde
     # olmalı çünkü hata değişkenine değer atıyor
     # ayrıca bu satır <paket()> fonksiyonunun dışında olmalı çünkü paket fonksiyonu özyinelemeli bir fonksiyon
     # her çağrıldığında tekrar web kazıma yapması programı çok hantallaştırıyor
+        oncekiBanka.remove(oncekiBanka[0])
+        oncekiBanka.append(kelimeBankasi_ismi)
+        oncekiKelimeBankasi = kelimeBankasi
+    else:
+        kelimeBankasi = oncekiKelimeBankasi
 
     def paket(cevap_butonNo = 0, configKontrolcu = True):
         # kısım2 ve kısım2.1'de <paket()> çağırılıyor ama <Label:dogruYanlis> ataması gerçekleşmediği için sonsuz
@@ -273,7 +285,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         cikisButonu = Button(soruPenceresi, text="çıkış", height=1, width=3, font=("Arial", 12),
                         command=lambda: soruPenceresi.destroy())
         anaMenuButonu = Button(soruPenceresi, text="Ana Menü", height=1, width=8, font=("Arial", 12),
-                        command=lambda: [soruPenceresi.destroy(), bankaSecimPenceresi()])
+                        command=lambda: [soruPenceresi.destroy(), bankaSecimPenceresi(), deleter()])
 
         buton1.grid(column = 0, row = 1)
         buton2.grid(column = 1, row = 1)
