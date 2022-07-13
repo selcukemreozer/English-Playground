@@ -265,7 +265,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         soruPenceresi = Tk()
         soruPenceresi.resizable(False, False)
         soruPenceresi.title('RAKES')
-        soruPenceresi.geometry('700x500+710+290')
+        soruPenceresi.geometry('700x350+710+290')
         soruPenceresi.columnconfigure(0, weight=1)
         soruPenceresi.columnconfigure(1, weight=1)
         soruPenceresi.columnconfigure(2, weight=1)
@@ -290,8 +290,8 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         buton1.grid(column = 0, row = 1)
         buton2.grid(column = 1, row = 1)
         buton3.grid(column = 2, row = 1)
-        cikisButonu.place(x=655, y=450)
-        anaMenuButonu.place(x=570, y=450)
+        cikisButonu.place(x=655, y=300)
+        anaMenuButonu.place(x=570, y=300)
         paket()
 
     else:
