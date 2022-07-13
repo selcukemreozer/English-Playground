@@ -49,7 +49,7 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         else:
             pass
 
-        kelimeListesi = tum_kelimeler.split(',')
+        kelimeListesi = tum_kelimeler.split(';')
         oncekiBanka.remove(oncekiBanka[0])
         oncekiBanka.append(kelime_bankasi_ismi)
         return kelimeListesi
