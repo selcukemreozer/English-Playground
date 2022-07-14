@@ -19,3 +19,5 @@ __Çalışma Mantığı:__ Araç, seçtiğiniz seviyeye göre hazırda bulunan k
     - [ ] ve yerel hafızada tutabilmesi  
     - [ ] ve sisteme yükleyebilmesi
 - [ ] puanlama sistemi geliştir
+- [ ] kelimeler için örnek cümle özelliği
+- [ ] kelime sorucu sorduğu kelimeyi(kullanıcı doğru bilirse) tekrar sormasın

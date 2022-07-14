@@ -49,7 +49,7 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         else:
             pass
 
-        kelimeListesi = tum_kelimeler.split(';')
+        kelimeListesi = tum_kelimeler.split('|')
         oncekiBanka.remove(oncekiBanka[0])
         oncekiBanka.append(kelime_bankasi_ismi)
         return kelimeListesi
@@ -82,7 +82,7 @@ def secenekBelirleyici(kelimeBankasi):
     Karşılaştırma düzgün çalışmalı.
 
     örn:
-    secim_ = rd.choice(kelimeBankasi).split(':') olsaydı >> secim_ = ['red','kırmızı']
+    secim_ = rd.choice(kelimeBankasi).split('^') olsaydı >> secim_ = ['red','kırmızı']
     olacaktı. Ve
 
     digerSecenek1 = 'kırmızı:red'
@@ -96,7 +96,7 @@ def secenekBelirleyici(kelimeBankasi):
     :return:
     """
     secim_ = rd.choice(kelimeBankasi)
-    ingilizceKelime, turkcesi = secim_.split(':')
+    ingilizceKelime, turkcesi = secim_.split('^')
 
     digerSecenek1 = rd.choice(kelimeBankasi)
     digerSecenek2 = rd.choice(kelimeBankasi)
@@ -138,7 +138,7 @@ def bankaSecimPenceresi():
     bankaSecimPenceresi.columnconfigure(2, weight=2)
 
     a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20),
-                     command=lambda: [soruPenceresi("hazir", "a1"), QUIT()])
+                     command=lambda: [soruPenceresi("topluluk", "a1"), QUIT()])
 
     a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "a2"), QUIT()])
@@ -197,14 +197,14 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         if hata:
             secenekler = secenekBelirleyici(kelimeBankasi)
             dogruCevap = secenekler[1]
-            secenek1 = secenekler[2].split(':')[1]
-            secenek2 = secenekler[3].split(':')[1]
+            secenek1 = secenekler[2].split('^')[1]
+            secenek2 = secenekler[3].split('^')[1]
 
             try:
                 if butonHafiza == cevap_butonNo and configKontrolcu:
-                    dogruYanlis.config(text = "doğru bildin!")
+                    dogruYanlis.config(text = "BRAVO!", bg = '#2EFE2E')
                 elif configKontrolcu:
-                    dogruYanlis.config(text = oncekiDogruCevap)
+                    dogruYanlis.config(text = oncekiDogruCevap, bg = '#FA5858') # FE2E2E FF4000
                 else:
                     pass
             except NameError:
@@ -265,33 +265,38 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         soruPenceresi = Tk()
         soruPenceresi.resizable(False, False)
         soruPenceresi.title('RAKES')
-        soruPenceresi.geometry('700x350+710+290')
+        soruPenceresi.geometry('1200x400+360+290')
         soruPenceresi.columnconfigure(0, weight=1)
         soruPenceresi.columnconfigure(1, weight=1)
         soruPenceresi.columnconfigure(2, weight=1)
 
-        soru = Label(soruPenceresi, text = "", bg = "white", anchor = CENTER, font = ("Arial", 25))
-        soru.grid(column = 1, row = 0, padx = 30, pady = 30)
+        soru = Label(soruPenceresi, text="", bg="white", anchor=CENTER, font=("Arial", 25))
+        soru.grid(column=0, row=0, padx=30, pady=30)
 
-        dogruYanlis = Label(soruPenceresi, text = "", font = ("Arial", 15))
-        dogruYanlis.grid(column = 1, row = 2, padx = 20, pady = 20)
+        dogruYanlis = Label(soruPenceresi, text="", font=("Arial", 15))
+        dogruYanlis.grid(column=0, row=1, padx=20, pady=20)
 
-        buton1 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20),
+        buton1 = Button(soruPenceresi, text="", height=1, width=30, font=("Arial", 20),
                         command = lambda: paket(1))
-        buton2 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20),
+        buton2 = Button(soruPenceresi, text="", height=1, width=30, font=("Arial", 20),
                         command = lambda: paket(2))
-        buton3 = Button(soruPenceresi, text = "", height = 1, width = 11, font = ("Arial", 20),
+        buton3 = Button(soruPenceresi, text="", height=1, width=30, font=("Arial", 20),
                         command = lambda: paket(3))
         cikisButonu = Button(soruPenceresi, text="çıkış", height=1, width=3, font=("Arial", 12),
                         command=lambda: soruPenceresi.destroy())
         anaMenuButonu = Button(soruPenceresi, text="Ana Menü", height=1, width=8, font=("Arial", 12),
                         command=lambda: [soruPenceresi.destroy(), bankaSecimPenceresi(), deleter()])
 
-        buton1.grid(column = 0, row = 1)
-        buton2.grid(column = 1, row = 1)
-        buton3.grid(column = 2, row = 1)
-        cikisButonu.place(x=655, y=300)
-        anaMenuButonu.place(x=570, y=300)
+        buton1.grid(column=0, row=2)
+        buton2.grid(column=0, row=3)
+        buton3.grid(column=0, row=4)
+        cikisButonu.place(x=451, y=350)
+        anaMenuButonu.place(x=366, y=350)
+
+        soonLabel = Label(soruPenceresi, text="Örnek cümle özelliği çok yakında!", font=("Arial", 13))
+        # https://wordsinasentence.com/
+        # https://www.tutorialspoint.com/how-to-create-a-hyperlink-with-a-label-in-tkinter#
+        soonLabel.grid(column=1, row=0)
         paket()
 
     else:
