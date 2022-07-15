@@ -117,7 +117,8 @@ def secenekBelirleyici(kelimeBankasi):
         else:
             break
 
-    return [ingilizceKelime, turkcesi, digerSecenek1, digerSecenek2]
+    print(f"silinecek eleman:{secim_}")
+    return [ingilizceKelime, turkcesi, digerSecenek1, digerSecenek2, secim_]
 ####################################################################
 
 ########################       tkinter      ########################
@@ -138,7 +139,7 @@ def bankaSecimPenceresi():
     bankaSecimPenceresi.columnconfigure(2, weight=2)
 
     a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20),
-                     command=lambda: [soruPenceresi("topluluk", "a1"), QUIT()])
+                     command=lambda: [soruPenceresi("topluluk", "beta"), QUIT()])
 
     a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "a2"), QUIT()])
@@ -187,28 +188,36 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         # hata döngüsüne giriyor. bunu engellemek için <configKontrolcu> parametresi kullanılıyor. Varsayılan değer:True
         # kısım1'de <paket()> alacak bir cevap_butonNo değerine sahip değildir
                                   # o yüzden cevap_butonNo = 0
+        global silinecekEleman
         global oncekiDogruCevap
         global butonHafiza
         global oncekiKelime_  # global değişken olmalı çünkü oncekiKelime_ 'yi aklında tutuyor
         # global değişkene ihtiyaç duydum çünkü fonksiyonu tuşla çağırdığımız için
         # return değişkenleri saklamanın yolunu bulamadım
 
-
-        if hata:
-            secenekler = secenekBelirleyici(kelimeBankasi)
-            dogruCevap = secenekler[1]
-            secenek1 = secenekler[2].split('^')[1]
-            secenek2 = secenekler[3].split('^')[1]
+        if hata and len(kelimeBankasi) >= 4:
 
             try:
                 if butonHafiza == cevap_butonNo and configKontrolcu:
                     dogruYanlis.config(text = "BRAVO!", bg = '#2EFE2E')
+                    print(f"silinecek eleman_:{silinecekEleman}")
+                    kelimeBankasi.remove(silinecekEleman) # kullanıcı doğru cevap verirse kelşme geçici bankadan silinir
                 elif configKontrolcu:
-                    dogruYanlis.config(text = oncekiDogruCevap, bg = '#FA5858') # FE2E2E FF4000
+                    if oncekiDogruCevap != "": # değişkene kısım3'te <""> değeri atanıyor o yüzden kırmızı bir çizgi
+                        # oluşmasını engellemek için bu if koşulu kullanılıyor
+                        dogruYanlis.config(text = oncekiDogruCevap, bg = '#FA5858') # FE2E2E FF4000
                 else:
                     pass
+                print(len(kelimeBankasi))
             except NameError:
                 butonHafiza = -1
+
+            secenekler = secenekBelirleyici(kelimeBankasi)
+            print(kelimeBankasi)
+            dogruCevap = secenekler[1]
+            secenek1 = secenekler[2].split('^')[1]
+            secenek2 = secenekler[3].split('^')[1]
+            silinecekEleman = secenekler[4] # doğru cevaplanması halinde bilinen kelime silinecek
 
             try:
                 if oncekiKelime_ == secenekler[0] and configKontrolcu: # kısım1
@@ -256,12 +265,28 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
                 # oncekiKelime_ ilk değerini kazandıktan sonra özyinelme ile tekrar bir değer
                 # ataması gerçekleşiyor
 
+        elif hata and len(kelimeBankasi) == 3:
+            print(kelimeBankasi)
+            # mesaj = "kelime bankasını başarıyla tamamladınız.\nKalan kelimeler:"\
+                    # +"\n"+kelimeBankasi[0]+"\n"+kelimeBankasi[1]
+            # print(type(mesaj))
+            # messagebox.showinfo(title='Başardın!', message=str(kelimeBankasi)) # fazladan pencere açıyor!
+            try:
+                soruPenceresi.destroy()
+            except:
+                pass
+
+            oncekiDogruCevap = "" # kısım3
+            oncekiBanka.remove(oncekiBanka[0])
+            oncekiBanka.append("")
+            bankaSecimPenceresi()
+
         else:
             pass
 
     paket(configKontrolcu=False) # kısım2.1
 
-    if hata:
+    if hata and len(kelimeBankasi) >= 4:
         soruPenceresi = Tk()
         soruPenceresi.resizable(False, False)
         soruPenceresi.title('RAKES')
@@ -295,6 +320,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
 
         soonLabel = Label(soruPenceresi, text="Örnek cümle özelliği çok yakında!", font=("Arial", 13))
         # https://wordsinasentence.com/
+        # https://dictionary.cambridge.org/tr/s%C3%B6zl%C3%BCk/ingilizce-t%C3%BCrk%C3%A7e/
         # https://www.tutorialspoint.com/how-to-create-a-hyperlink-with-a-label-in-tkinter#
         soonLabel.grid(column=1, row=0)
         paket()
