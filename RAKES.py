@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests as rq
 import random as rd
+from kelimeBankasiDuzenleyici import *
 from tkinter import *
 from tkinter import messagebox
 from icecream import ic
@@ -47,6 +48,11 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         elif tip == "topluluk":
             results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
             tum_kelimeler = results.read()
+
+            if tum_kelimeler[-1] == "|": # str sonundaki eleman <"|"> ise hata çıkmaması için sondaki <"|"> kaldırıyor
+                tum_kelimeler = tum_kelimeler[:-1]
+            else:
+                pass
         else:
             pass
 
@@ -56,8 +62,7 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         return kelimeListesi
 
     except FileNotFoundError:
-        messagebox.showwarning(title="HATA! >> warning", message="Aradığınız dosya bulunamadı!")
-        messagebox.showerror(title="error", message="selam")
+        messagebox.showerror(title="HATA! >> warning", message="Aradığınız dosya bulunamadı!")
         hata = False
         # return [":"] # dosya bulunamadı hatası aldığında secenekBelirleyici'ye değer döndürmesi hataya sebep oluyor
                   # o yüzden boş liste döndürüyor >> hata değişkeniyle hallettik
@@ -156,6 +161,9 @@ def bankaSecimPenceresi():
 
     c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
+
+    butonBeta = Button(bankaSecimPenceresi, text="yeni kelime bankasi olustur", font=("Arial", 20),
+                       command=lambda: kelimeBankasiOlustur("name"))
 
     a1Buton.grid(column=0, row=0, sticky=E, padx=5, pady=50)
     a2Buton.grid(column=1, row=0, sticky=W, padx=5, pady=50)
@@ -268,10 +276,12 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
 
         elif hata and len(kelimeBankasi) == 3:
             print(kelimeBankasi)
+            kelimeBankasi.remove(silinecekEleman) # bilinen son kelimeyi siliyor
             # mesaj = "kelime bankasını başarıyla tamamladınız.\nKalan kelimeler:"\
                     # +"\n"+kelimeBankasi[0]+"\n"+kelimeBankasi[1]
             # print(type(mesaj))
             # messagebox.showinfo(title='Başardın!', message=str(kelimeBankasi)) # fazladan pencere açıyor!
+            soruPenceresiMessage('Başardın!')
             try:
                 soruPenceresi.destroy()
             except:
@@ -325,6 +335,20 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         # https://www.tutorialspoint.com/how-to-create-a-hyperlink-with-a-label-in-tkinter#
         soonLabel.grid(column=1, row=0)
         paket()
+
+        def soruPenceresiMessage(type):
+            w = Tk()
+            w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
+                         # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
+            if type == "Başardın!":
+                message = "kalan kelimeler:\n\n"
+
+                for each in kelimeBankasi:
+                    word1, word2 = each.split('^')
+                    message += (word1 + " >> "+ word2 + "\n")
+
+                messagebox.showinfo(title='Başardın!', message=message)
+                w.destroy()
 
     else:
         pass
