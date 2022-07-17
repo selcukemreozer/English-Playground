@@ -10,6 +10,7 @@ def kelimeBankasiOlustur(isim):
         w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
                          # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
         messagebox.showerror(title="Aynı İsim!", message="zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
+        w.destroy()
         print("zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
 
 
