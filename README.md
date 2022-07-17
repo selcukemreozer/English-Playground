@@ -15,9 +15,13 @@ __Çalışma Mantığı:__ Araç, seçtiğiniz seviyeye göre hazırda bulunan k
 ## RAKES İçin Hedefler ve Gelecek Özellikler
 - [x] Arayüz inşa et
 - [ ] Hazır _Kelime Bankaları_ oluştur.
-	- [ ] a1 [ ] a2
-	- [ ] b1 [ ] b2
-	- [ ] c1 [ ] c2	
+	- [x] a1 
+	- [x] a2
+	- [x] b1 
+	- [ ] b2
+	- [ ] c1 
+	- [ ] c2
+	
 - [ ] Kullanıcının kendi kelime bankasını oluşturabilmesi 
     - [ ] ve yerel hafızada tutabilmesi  
     - [ ] ve sisteme yükleyebilmesi
