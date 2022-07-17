@@ -4,6 +4,7 @@ import random as rd
 from tkinter import *
 from tkinter import messagebox
 from icecream import ic
+
 oncekiBanka = [""]
 def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
