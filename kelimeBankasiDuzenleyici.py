@@ -23,7 +23,8 @@ def kelimeBankasiGuncelle(isim, ingKelime, turkceKarsiligi):
 
 kelimeBankasiOlustur("a")
 
-def yeniBankaKelimeEklemePenceresi():
+def yeniBankaKelimeEklemePenceresi(msater, isim):
+
     pencere = Tk()
     pencere.geometry("500x300")
     pencere.title("Kelime Bankası ")
