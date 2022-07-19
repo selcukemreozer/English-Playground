@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests as rq
 import random as rd
-from kelimeBankasiDuzenleyici import *
+from kelimeBankasiDuzenleyici import kelimeBankasiOlustur
 from tkinter import *
 from tkinter import messagebox
 from icecream import ic
@@ -162,8 +162,8 @@ def bankaSecimPenceresi():
     c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
 
-    butonBeta = Button(bankaSecimPenceresi, text="yeni kelime bankasi olustur", font=("Arial", 20),
-                       command=lambda: kelimeBankasiOlustur("name"))
+    butonBeta = Button(bankaSecimPenceresi, text="yeni kelime bankasi olustur", font=("Arial", 15),
+                       command=lambda: kelimeBankasiOlustur(master=bankaSecimPenceresi, isim= "ab"))
 
     a1Buton.grid(column=0, row=0, sticky=E, padx=5, pady=50)
     a2Buton.grid(column=1, row=0, sticky=W, padx=5, pady=50)
@@ -171,6 +171,7 @@ def bankaSecimPenceresi():
     b2Buton.grid(column=1, row=1, sticky=W, padx=5, pady=5)
     c1Buton.grid(column=0, row=2, sticky=E, padx=5, pady=50)
     c2Buton.grid(column=1, row=2, sticky=W, padx=5, pady=50)
+    butonBeta.grid(column=2, row=1)
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
                # her ana menüye dönüşte önceki doğru cevabı siliyor. Bu sayede tıklamadığın soruların cevabını görmicen
