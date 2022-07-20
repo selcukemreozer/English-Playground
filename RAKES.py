@@ -4,6 +4,7 @@ import random as rd
 from kelimeBankasiDuzenleyici import kelimeBankasiOlustur
 from tkinter import *
 from tkinter import messagebox
+import tkinter.ttk as ttk
 from icecream import ic
 
 oncekiBanka = [""]
@@ -139,39 +140,57 @@ def bankaSecimPenceresi():
     bankaSecimPenceresi = Tk()
     bankaSecimPenceresi.resizable(False, False)
     bankaSecimPenceresi.title('RAKES')
-    bankaSecimPenceresi.geometry('700x500+710+290')
+    bankaSecimPenceresi.geometry('700x500+610+190')
     bankaSecimPenceresi.columnconfigure(0, weight=1)
     bankaSecimPenceresi.columnconfigure(1, weight=1)
     bankaSecimPenceresi.columnconfigure(2, weight=2)
 
-    a1Buton = Button(bankaSecimPenceresi, text="a1", font=("Arial", 20),
+    butonFrame = LabelFrame(bankaSecimPenceresi, text="Hazır Kelime Bankaları", font=("Arial", 14))
+
+    a1Buton = Button(butonFrame, text="a1", font=("Arial", 20),
                      command=lambda: [soruPenceresi("topluluk", "beta"), QUIT()])
 
-    a2Buton = Button(bankaSecimPenceresi, text="a2", font=("Arial", 20),
+    a2Buton = Button(butonFrame, text="a2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "a2"), QUIT()])
 
-    b1Buton = Button(bankaSecimPenceresi, text="b1", font=("Arial", 20),
+    b1Buton = Button(butonFrame, text="b1", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "b1"), QUIT()])
 
-    b2Buton = Button(bankaSecimPenceresi, text="b2", font=("Arial", 20),
+    b2Buton = Button(butonFrame, text="b2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "b2"), QUIT()])
 
-    c1Buton = Button(bankaSecimPenceresi, text="c1", font=("Arial", 20),
+    c1Buton = Button(butonFrame, text="c1", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c1"), QUIT()])
 
-    c2Buton = Button(bankaSecimPenceresi, text="c2", font=("Arial", 20),
+    c2Buton = Button(butonFrame, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
 
-    butonBeta = Button(bankaSecimPenceresi, text="yeni kelime bankasi olustur", font=("Arial", 15),
-                       command=lambda: kelimeBankasiOlustur(master=bankaSecimPenceresi, isim= "ab"))
+    logwin = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
 
-    a1Buton.grid(column=0, row=0, sticky=E, padx=5, pady=50)
-    a2Buton.grid(column=1, row=0, sticky=W, padx=5, pady=50)
-    b1Buton.grid(column=0, row=1, sticky=E, padx=5, pady=5)
-    b2Buton.grid(column=1, row=1, sticky=W, padx=5, pady=5)
-    c1Buton.grid(column=0, row=2, sticky=E, padx=5, pady=50)
-    c2Buton.grid(column=1, row=2, sticky=W, padx=5, pady=50)
-    butonBeta.grid(column=2, row=1)
+    yerel_banka_ismi_entry = Entry(logwin, width=28)
+    yerel_banka_ismi = Label(logwin, text="dosya adı:", font=("Arial", 12, "italic"))
+
+    butonBeta = Button(logwin, text="olustur", font=("Arial", 13),
+                       command=lambda: [
+                           kelimeBankasiOlustur(master=bankaSecimPenceresi, isim=yerel_banka_ismi_entry.get()),
+                           yerel_banka_ismi_entry.delete(0, END)])
+
+    a1Buton.grid(column=0, row=0, padx=20, pady=10)
+    a2Buton.grid(column=1, row=0, padx=20, pady=10)
+    b1Buton.grid(column=0, row=1, padx=20, pady=10)
+    b2Buton.grid(column=1, row=1, padx=20, pady=10)
+    c1Buton.grid(column=0, row=2, padx=20, pady=10)
+    c2Buton.grid(column=1, row=2, padx=20, pady=10)
+    # seperator.place(x=100,y=100, relheight=1)
+    # yerel_banka_ismi.place(x=350, y=40)
+    # yerel_banka_ismi_entry.place(x=354, y=70)
+    # butonBeta.place(x=350, y=100)
+    logwin.place(x=300, y=40)
+    butonFrame.place(x=50, y=40)
+    yerel_banka_ismi.grid(pady=5)
+    yerel_banka_ismi_entry.grid(pady=5, padx=5)
+    butonBeta.grid(pady=5, padx=10)
+
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
                # her ana menüye dönüşte önceki doğru cevabı siliyor. Bu sayede tıklamadığın soruların cevabını görmicen

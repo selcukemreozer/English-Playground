@@ -1,28 +1,33 @@
 from tkinter import messagebox
 from tkinter import *
 import os
+
 def kelimeBankasiOlustur(master, isim):
-    dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+    if isim.replace(" ", "") != "":
+        dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+        try:
+            open(dosyaAdi, 'x')
+            yeniBankaKelimeEklemePenceresi(master=master, isim=isim)
+        except FileExistsError:
+            w = Tk()
+            w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
+            # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
+            messagebox.showerror("Aynı İsim!", message="zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
+            w.destroy()
 
-    try:
-        open(dosyaAdi, 'x')
-        yeniBankaKelimeEklemePenceresi(master=master, isim=isim)
-    except FileExistsError:
-        w = Tk()
-        w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
-                         # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
-        messagebox.showerror(title="Aynı İsim!", message="zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
-        w.destroy()
-        print("zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
+    else:
+        messagebox.showwarning("Uyarı!", "Lütfen bankanıza bir isim koyun.")
 
 
-def kelimeBankasiGuncelle(isim, ingKelime, turkceKarsiligi):
-    dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi):
+    if ing_kelime != '' and turkce_karsiligi != '':
+        dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+        dosya = open(dosyaAdi, 'a')
+        dosya.write(ing_kelime + "^" + turkce_karsiligi + "|")
+        dosya.close()
 
-    dosya = open(dosyaAdi, 'a')
-    dosya.write(ingKelime + "^" + turkceKarsiligi + "|")
-    dosya.close()
-
+    else:
+        messagebox.showwarning(title="Uyarı!", message="Lütfen kutuları boş bırakmayın.")
 
 
 def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pencere oluşturmak yerine
@@ -30,26 +35,49 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     # işlem yapılamayacak. Birçok hatanın önüne geçilecek.
     def pencere_kapat(senaryo="iptal"):
         if senaryo == "kaydet":
-            pass
+            pencere.grab_release()
+            pencere.destroy()
+
         elif senaryo == "iptal":
-            dosyaAdi = "kelime_bankalari/" + isim + ".txt"
-            os.remove(dosyaAdi)
-        pencere.grab_release()
-        pencere.destroy()
+            yesNo = messagebox.askyesno(title="Uyarı", message="kaydedilmemiş değişiklikler var çıkmak istediğinizden emin misiniz?")
+
+            if yesNo:
+                dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+                os.remove(dosyaAdi) # kullanıcı kaydetmek yerine kapatırsa oluşturulan dosya silinecek
+                pencere.grab_release()
+                pencere.destroy()
+            else:
+                pass
+
 
     pencere = Toplevel(master)
-    pencere.geometry("500x300")
+    pencere.geometry("500x200+710+340")
     pencere.title("Kelime Bankası Düzenleyici")
     pencere.columnconfigure(0, weight=1)
     pencere.columnconfigure(1, weight=1)
 
-    dosya_ismi = Label(pencere, text=isim)
-    kapat_tusu = Button(pencere, text="iptal", command=pencere_kapat)
-    dosya_ismi.grid()
-    ingilizceKelime = Entry()
-    kapat_tusu.grid()
+    dosya_ismi = Label(pencere, text="dosya ismi:"+isim, font=("Arial", 12))
+    ekle_tusu = Button(pencere, text="Ekle",
+                       command=lambda: kelimeBankasiGuncelle(isim, ingilizceKelime.get(), turkceKarsiligi.get()))
+
+    kaydet_tusu = Button(pencere, text= "Kaydet",
+                         command=lambda: pencere_kapat(senaryo="kaydet"))
+
+    # iptal_tusu = Button(pencere, text="iptal", command=pencere_kapat)
+
+    ingilizceKelime = Entry(pencere)
+    turkceKarsiligi = Entry(pencere)
+
+    dosya_ismi.grid(column=0, row=0)
+    ingilizceKelime.grid(column=0, row=1)
+    turkceKarsiligi.grid(column=1, row=1)
+    ekle_tusu.grid(column=1, row=2)
+    kaydet_tusu.grid(column=1, row=3, pady=5)
+    # iptal_tusu.place(x=400, y=170)
 
     pencere.grab_set()
+    pencere.protocol('WM_DELETE_WINDOW', pencere_kapat) # iptal tuşuyla değil de [X] tuşuyla kapatırsa
+    # oluşturulan <txt> dosyasının silinmesini sağlıyor
 
 """    
     pencere = Tk()
