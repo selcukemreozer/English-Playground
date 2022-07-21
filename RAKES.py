@@ -130,7 +130,7 @@ def secenekBelirleyici(kelimeBankasi):
 
 ########################       tkinter      ########################
 def bankaOlustur(master, isim, entry_name):
-    kelimeBankasiOlustur(master=master, isim=isim)
+    k=kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
 
 def bankaSecimPenceresi():
