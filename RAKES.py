@@ -4,8 +4,8 @@ import random as rd
 from kelimeBankasiDuzenleyici import kelimeBankasiOlustur
 from tkinter import *
 from tkinter import messagebox
-import tkinter.ttk as ttk
-from icecream import ic
+# import tkinter.ttk as ttk
+# from icecream import ic
 
 oncekiBanka = [""]
 def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
@@ -129,6 +129,10 @@ def secenekBelirleyici(kelimeBankasi):
 ####################################################################
 
 ########################       tkinter      ########################
+def bankaOlustur(master, isim, entry_name):
+    kelimeBankasiOlustur(master=master, isim=isim)
+    entry_name.delete(0, END)
+
 def bankaSecimPenceresi():
     global hata
 
@@ -170,10 +174,11 @@ def bankaSecimPenceresi():
     yerel_banka_ismi_entry = Entry(logwin, width=28)
     yerel_banka_ismi = Label(logwin, text="dosya adı:", font=("Arial", 12, "italic"))
 
-    butonBeta = Button(logwin, text="olustur", font=("Arial", 13),
-                       command=lambda: [
-                           kelimeBankasiOlustur(master=bankaSecimPenceresi, isim=yerel_banka_ismi_entry.get()),
-                           yerel_banka_ismi_entry.delete(0, END)])
+    bankaOlusturButonu = Button(logwin, text="olustur", font=("Arial", 13), command=lambda: bankaOlustur(
+        master=bankaSecimPenceresi,
+        isim=yerel_banka_ismi_entry.get(),
+        entry_name=yerel_banka_ismi_entry)
+                       )
 
     a1Buton.grid(column=0, row=0, padx=20, pady=10)
     a2Buton.grid(column=1, row=0, padx=20, pady=10)
@@ -189,7 +194,7 @@ def bankaSecimPenceresi():
     butonFrame.place(x=50, y=40)
     yerel_banka_ismi.grid(pady=5)
     yerel_banka_ismi_entry.grid(pady=5, padx=5)
-    butonBeta.grid(pady=5, padx=10)
+    bankaOlusturButonu.grid(pady=5, padx=10)
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu

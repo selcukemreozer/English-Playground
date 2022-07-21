@@ -8,6 +8,7 @@ def kelimeBankasiOlustur(master, isim):
         try:
             open(dosyaAdi, 'x')
             yeniBankaKelimeEklemePenceresi(master=master, isim=isim)
+
         except FileExistsError:
             w = Tk()
             w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
@@ -34,12 +35,16 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     # alt pencere oluşturuyor. Bu sayede <yeniBankaKelimeEklemePenceresi> açıkkan <master> pencerede
     # işlem yapılamayacak. Birçok hatanın önüne geçilecek.
     def pencere_kapat(senaryo="iptal"):
-        if senaryo == "kaydet":
+        if "kaydet" in senaryo:
+            messagebox.showinfo("Kaydedildi", "Dosya başarıyla kaydedildi")
             pencere.grab_release()
             pencere.destroy()
 
         elif senaryo == "iptal":
-            yesNo = messagebox.askyesno(title="Uyarı", message="kaydedilmemiş değişiklikler var çıkmak istediğinizden emin misiniz?")
+            yesNo = messagebox.askyesno(
+                title="Uyarı",
+                message="kaydedilmemiş değişiklikler var çıkmak istediğinizden emin misiniz?"
+            )
 
             if yesNo:
                 dosyaAdi = "kelime_bankalari/" + isim + ".txt"
@@ -48,6 +53,7 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
                 pencere.destroy()
             else:
                 pass
+
 
 
     pencere = Toplevel(master)
@@ -64,15 +70,18 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
                          command=lambda: pencere_kapat(senaryo="kaydet"))
 
     # iptal_tusu = Button(pencere, text="iptal", command=pencere_kapat)
-
+    ingLabel = Label(pencere, text="İngilizce Kelime", font=("Arial", 11, "italic"))
+    trLabel = Label(pencere, text="Türkçe karşılığı", font=("Arial", 11, "italic"))
     ingilizceKelime = Entry(pencere)
     turkceKarsiligi = Entry(pencere)
 
     dosya_ismi.grid(column=0, row=0)
-    ingilizceKelime.grid(column=0, row=1)
-    turkceKarsiligi.grid(column=1, row=1)
-    ekle_tusu.grid(column=1, row=2)
-    kaydet_tusu.grid(column=1, row=3, pady=5)
+    ingLabel.grid(column=0, row=1)
+    trLabel.grid(column=1, row=1)
+    ingilizceKelime.grid(column=0, row=2)
+    turkceKarsiligi.grid(column=1, row=2)
+    ekle_tusu.grid(column=1, row=3, pady=7)
+    kaydet_tusu.grid(column=1, row=4)
     # iptal_tusu.place(x=400, y=170)
 
     pencere.grab_set()
