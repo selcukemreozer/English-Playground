@@ -153,12 +153,11 @@ def dosyaGezgini(yerel_banka_entry, label_name): # kısım4
 def bankaOlustur(master, isim, entry_name, yerel_banka_entry):
     filename = kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
-    file_exists = os.path.exists("/kelime_bankalari/"+filename+".txt")
+    file_exists = os.path.exists("kelime_bankalari/"+filename+".txt") # dosyanın var olup olmadığına bakıyor ama çalışmıyor
+
     if filename != "" and file_exists:
         yerel_banka_entry.insert(0, filename)
     else:
-        print(file_exists)
-        print(filename)
         pass
 
 def bankaSecimPenceresi():
