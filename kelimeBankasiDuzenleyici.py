@@ -8,6 +8,7 @@ def kelimeBankasiOlustur(master, isim):
         try:
             open(dosyaAdi, 'x')
             yeniBankaKelimeEklemePenceresi(master=master, isim=isim)
+            return isim
 
         except FileExistsError:
             w = Tk()
@@ -15,17 +16,27 @@ def kelimeBankasiOlustur(master, isim):
             # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
             messagebox.showerror("Aynı İsim!", message="zaten bu isimde bir dosya var lütfen yeni bir isim kullanın.")
             w.destroy()
+            return "" # none değeri hataya sebep oluyor
 
     else:
         messagebox.showwarning("Uyarı!", "Lütfen bankanıza bir isim koyun.")
+        return "" # none değeri hataya sebep oluyor
 
 
 def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi):
     if ing_kelime != '' and turkce_karsiligi != '':
         dosyaAdi = "kelime_bankalari/" + isim + ".txt"
-        dosya = open(dosyaAdi, 'a')
-        dosya.write(ing_kelime + "^" + turkce_karsiligi + "|")
+        dosya = open(dosyaAdi, 'r')
+        kelime = ing_kelime + "^" + turkce_karsiligi + "|"
+        icerik = dosya.read()
         dosya.close()
+        if kelime in icerik: # aynı kelimenin eklenmesini engelliyor
+            messagebox.showinfo(title="uyarı", message="bu kelime zaten mevcut")
+
+        else:
+            dosya = open(dosyaAdi, 'a')
+            dosya.write(kelime)
+            dosya.close()
 
     else:
         messagebox.showwarning(title="Uyarı!", message="Lütfen kutuları boş bırakmayın.")
@@ -34,8 +45,17 @@ def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi):
 def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pencere oluşturmak yerine
     # alt pencere oluşturuyor. Bu sayede <yeniBankaKelimeEklemePenceresi> açıkkan <master> pencerede
     # işlem yapılamayacak. Birçok hatanın önüne geçilecek.
+    kelimesayiList = list()
+
+    def multiTaskFunc():
+        eklenen_kelime = "eklenen kelime >> "+ingilizceKelime.get()+" : "+turkceKarsiligi.get()
+        eklenenKelimeLabel.config(text=eklenen_kelime)
+        ingilizceKelime.delete(0, END)
+        turkceKarsiligi.delete(0, END)
+        kelimesayiList.append(1)
+
     def pencere_kapat(senaryo="iptal"):
-        if "kaydet" in senaryo:
+        if senaryo == "kaydet" and len(kelimesayiList)>=4:
             messagebox.showinfo("Kaydedildi", "Dosya başarıyla kaydedildi")
             pencere.grab_release()
             pencere.destroy()
@@ -55,6 +75,12 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
                 pass
 
 
+        elif len(kelimesayiList) < 4:
+            message = "En az " + str(4 - len(kelimesayiList)) + " daha kelime eklemeniz lazım!"
+            messagebox.showwarning(title="Uyarı",
+                                  message=message)
+
+
 
     pencere = Toplevel(master)
     pencere.geometry("500x200+710+340")
@@ -63,8 +89,11 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     pencere.columnconfigure(1, weight=1)
 
     dosya_ismi = Label(pencere, text="dosya ismi:"+isim, font=("Arial", 12))
+    eklenenKelimeLabel = Label(pencere, text="", font=("Arial", 11, "italic"))
     ekle_tusu = Button(pencere, text="Ekle",
-                       command=lambda: kelimeBankasiGuncelle(isim, ingilizceKelime.get(), turkceKarsiligi.get()))
+                       command=lambda: [kelimeBankasiGuncelle(isim, ingilizceKelime.get(),
+                                        turkceKarsiligi.get()),
+                                        multiTaskFunc()])
 
     kaydet_tusu = Button(pencere, text= "Kaydet",
                          command=lambda: pencere_kapat(senaryo="kaydet"))
@@ -80,6 +109,7 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     trLabel.grid(column=1, row=1)
     ingilizceKelime.grid(column=0, row=2)
     turkceKarsiligi.grid(column=1, row=2)
+    eklenenKelimeLabel.grid(column=0, row=3)
     ekle_tusu.grid(column=1, row=3, pady=7)
     kaydet_tusu.grid(column=1, row=4)
     # iptal_tusu.place(x=400, y=170)

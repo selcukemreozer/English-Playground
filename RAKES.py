@@ -4,6 +4,9 @@ import random as rd
 from kelimeBankasiDuzenleyici import kelimeBankasiOlustur
 from tkinter import *
 from tkinter import messagebox
+from tkinter import filedialog
+import os.path
+
 # import tkinter.ttk as ttk
 # from icecream import ic
 
@@ -19,7 +22,7 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
 
         if tip == "hazir":
 
-            URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/" + kelime_bankasi_ismi+".txt"
+            URL = "https://github.com/selcukemreozer/English-Playground/blob/main/kelime_bankalari/" + kelime_bankasi_ismi + ".txt"
             page = rq.get(URL)
             soup = BeautifulSoup(page.content, 'html.parser')
             results = soup.findAll("td", {"id": "LC1"})
@@ -46,8 +49,11 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
                 else:
                     pass
 
-        elif tip == "topluluk":
-            results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
+        elif tip == "yerel":
+            if kelime_bankasi_ismi[0] != "C": # kısım4
+                results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
+            elif kelime_bankasi_ismi[0] == "C":
+                results = open(kelime_bankasi_ismi, "r+", encoding="utf-8")
             tum_kelimeler = results.read()
 
             if tum_kelimeler[-1] == "|": # str sonundaki eleman <"|"> ise hata çıkmaması için sondaki <"|"> kaldırıyor
@@ -129,9 +135,31 @@ def secenekBelirleyici(kelimeBankasi):
 ####################################################################
 
 ########################       tkinter      ########################
-def bankaOlustur(master, isim, entry_name):
-    k=kelimeBankasiOlustur(master=master, isim=isim)
+def yardim():
+    message = "Dosyanın direkt adını yazıp çalıştırabilirsiniz." \
+              " Eğer bu işe yaramazsa ya da dosyanın adını tam bilmiyorsanız <Gözat> butonunu kullanabilirsiniz."
+    messagebox.showinfo(title="Yardım", message=message)
+
+def dosyaGezgini(yerel_banka_entry, label_name): # kısım4
+    filename = filedialog.askopenfilename(initialdir="/kelime_bankalari",
+                                          title="Dosya Seç",
+                                          filetypes=(("Text Files", "*.txt*"), ("all files", "*.*")))
+    print(filename)
+    label_name.config(text=filename.split("/")[-1])
+    yerel_banka_entry.delete(0, END)
+    yerel_banka_entry.insert(0, filename)
+
+
+def bankaOlustur(master, isim, entry_name, yerel_banka_entry):
+    filename = kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
+    file_exists = os.path.exists("/kelime_bankalari/"+filename+".txt")
+    if filename != "" and file_exists:
+        yerel_banka_entry.insert(0, filename)
+    else:
+        print(file_exists)
+        print(filename)
+        pass
 
 def bankaSecimPenceresi():
     global hata
@@ -152,7 +180,7 @@ def bankaSecimPenceresi():
     butonFrame = LabelFrame(bankaSecimPenceresi, text="Hazır Kelime Bankaları", font=("Arial", 14))
 
     a1Buton = Button(butonFrame, text="a1", font=("Arial", 20),
-                     command=lambda: [soruPenceresi("topluluk", "beta"), QUIT()])
+                     command=lambda: [soruPenceresi("yerel", "beta"), QUIT()])
 
     a2Buton = Button(butonFrame, text="a2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "a2"), QUIT()])
@@ -169,16 +197,26 @@ def bankaSecimPenceresi():
     c2Buton = Button(butonFrame, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
 
-    logwin = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
+    bankaOlusturCercevesi = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
+    yerel_banka_ismi_entry = Entry(bankaOlusturCercevesi, width=20)
+    yerel_banka_ismi = Label(bankaOlusturCercevesi, text="dosya adı:", font=("Arial", 12, "italic"))
+    bankaOlusturButonu = Button(bankaOlusturCercevesi, text="olustur", font=("Arial", 13),
+                                command=lambda: bankaOlustur(master=bankaSecimPenceresi,
+                                                             isim=yerel_banka_ismi_entry.get(),
+                                                             entry_name=yerel_banka_ismi_entry,
+                                                             yerel_banka_entry=yerel_banka_bul_entry))
 
-    yerel_banka_ismi_entry = Entry(logwin, width=28)
-    yerel_banka_ismi = Label(logwin, text="dosya adı:", font=("Arial", 12, "italic"))
+    yerelBankaCalistirCercevesi = LabelFrame(bankaSecimPenceresi, text='Yerel Banka ile Çalış', font=('Arial', 14))
+    yerel_banka_bul_entry = Entry(yerelBankaCalistirCercevesi, width=20)
+    dosyaAdiLabel = Label(yerelBankaCalistirCercevesi, text="", font=("Arial", 10, "italic"))
+    yerelBankaAcButon = Button(yerelBankaCalistirCercevesi, text="Çalıştır", font=("Arial", 13), width=7,
+                               command=lambda: [soruPenceresi("yerel", yerel_banka_bul_entry.get()), QUIT()])
 
-    bankaOlusturButonu = Button(logwin, text="olustur", font=("Arial", 13), command=lambda: bankaOlustur(
-        master=bankaSecimPenceresi,
-        isim=yerel_banka_ismi_entry.get(),
-        entry_name=yerel_banka_ismi_entry)
-                       )
+    gozatButon = Button(yerelBankaCalistirCercevesi, text="Gözat", font=("Arial", 13, "italic"), width=6,
+                        command=lambda: dosyaGezgini(yerel_banka_entry=yerel_banka_bul_entry, label_name=dosyaAdiLabel))
+
+    yardimButon = Button(bankaSecimPenceresi, text="?", font=("Arial", 10, ["bold", "italic"]), height=5,
+                         command=yardim)
 
     a1Buton.grid(column=0, row=0, padx=20, pady=10)
     a2Buton.grid(column=1, row=0, padx=20, pady=10)
@@ -186,15 +224,20 @@ def bankaSecimPenceresi():
     b2Buton.grid(column=1, row=1, padx=20, pady=10)
     c1Buton.grid(column=0, row=2, padx=20, pady=10)
     c2Buton.grid(column=1, row=2, padx=20, pady=10)
-    # seperator.place(x=100,y=100, relheight=1)
-    # yerel_banka_ismi.place(x=350, y=40)
-    # yerel_banka_ismi_entry.place(x=354, y=70)
-    # butonBeta.place(x=350, y=100)
-    logwin.place(x=300, y=40)
+
+    bankaOlusturCercevesi.place(x=300, y=40)
+    yerel_banka_ismi.grid(column=0, row=0, pady=5)
+    yerel_banka_ismi_entry.grid(column=1, row=0, pady=7, padx=5)
+    bankaOlusturButonu.grid(column=1, pady=5, padx=7, sticky=E)
+
     butonFrame.place(x=50, y=40)
-    yerel_banka_ismi.grid(pady=5)
-    yerel_banka_ismi_entry.grid(pady=5, padx=5)
-    bankaOlusturButonu.grid(pady=5, padx=10)
+
+    yerelBankaCalistirCercevesi.place(x=300, y=200)
+    yerel_banka_bul_entry.grid(column=0, row=0, pady=5)
+    dosyaAdiLabel.grid(column=0, row=1, padx=5)
+    yerelBankaAcButon.grid(column=1, row=1, padx=5, pady=5)
+    gozatButon.grid(column=1, row=0)
+    yardimButon.place(x=533, y=210)
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
