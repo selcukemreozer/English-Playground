@@ -50,16 +50,20 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
                     pass
 
         elif tip == "yerel":
-            if kelime_bankasi_ismi[0] != "C": # kısım4
-                results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
-            elif kelime_bankasi_ismi[0] == "C":
-                results = open(kelime_bankasi_ismi, "r+", encoding="utf-8")
-            tum_kelimeler = results.read()
+            if os.path.exists("kelime_bankalari/"+kelime_bankasi_ismi+".txt"):
+                if kelime_bankasi_ismi[0] != "C": # kısım4
+                    results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
+                elif kelime_bankasi_ismi[0] == "C":
+                    results = open(kelime_bankasi_ismi, "r+", encoding="utf-8")
+                tum_kelimeler = results.read()
 
-            if tum_kelimeler[-1] == "|": # str sonundaki eleman <"|"> ise hata çıkmaması için sondaki <"|"> kaldırıyor
-                tum_kelimeler = tum_kelimeler[:-1]
+                if tum_kelimeler[-1] == "|": # str sonundaki eleman <"|"> ise hata çıkmaması için sondaki <"|"> kaldırıyor
+                    tum_kelimeler = tum_kelimeler[:-1]
+                else:
+                    pass
             else:
-                pass
+                hata = False
+                messagebox.showerror(title="Hata!", message="Dosya bulunamadı.")
         else:
             pass
 
