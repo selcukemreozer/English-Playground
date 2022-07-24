@@ -50,7 +50,7 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
                     pass
 
         elif tip == "yerel":
-            if os.path.exists("kelime_bankalari/"+kelime_bankasi_ismi+".txt"):
+            if os.path.exists("kelime_bankalari/"+kelime_bankasi_ismi+".txt") or os.path.exists(kelime_bankasi_ismi):
                 if kelime_bankasi_ismi[0] != "C": # kısım4
                     results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
                 elif kelime_bankasi_ismi[0] == "C":
