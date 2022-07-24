@@ -23,10 +23,11 @@ def kelimeBankasiOlustur(master, isim):
         return "" # none değeri hataya sebep oluyor
 
 
-def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi):
+def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label):
     if ing_kelime != '' and turkce_karsiligi != '':
         dosyaAdi = "kelime_bankalari/" + isim + ".txt"
         dosya = open(dosyaAdi, 'r')
+        eklenen_kelime = "eklenen kelime >> " + ing_kelime + " : " + turkce_karsiligi
         kelime = ing_kelime + "^" + turkce_karsiligi + "|"
         icerik = dosya.read()
         dosya.close()
@@ -36,6 +37,7 @@ def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi):
         else:
             dosya = open(dosyaAdi, 'a')
             dosya.write(kelime)
+            label.config(text=eklenen_kelime)
             dosya.close()
 
     else:
@@ -48,14 +50,12 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     kelimesayiList = list()
 
     def multiTaskFunc():
-        eklenen_kelime = "eklenen kelime >> "+ingilizceKelime.get()+" : "+turkceKarsiligi.get()
-        eklenenKelimeLabel.config(text=eklenen_kelime)
         ingilizceKelime.delete(0, END)
         turkceKarsiligi.delete(0, END)
         kelimesayiList.append(1)
 
     def pencere_kapat(senaryo="iptal"):
-        if senaryo == "kaydet" and len(kelimesayiList)>=4:
+        if senaryo == "kaydet" and len(kelimesayiList) >= 4:
             messagebox.showinfo("Kaydedildi", "Dosya başarıyla kaydedildi")
             pencere.grab_release()
             pencere.destroy()
@@ -92,7 +92,7 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     eklenenKelimeLabel = Label(pencere, text="", font=("Arial", 11, "italic"))
     ekle_tusu = Button(pencere, text="Ekle",
                        command=lambda: [kelimeBankasiGuncelle(isim, ingilizceKelime.get(),
-                                        turkceKarsiligi.get()),
+                                        turkceKarsiligi.get(), label=eklenenKelimeLabel),
                                         multiTaskFunc()])
 
     kaydet_tusu = Button(pencere, text= "Kaydet",
