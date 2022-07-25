@@ -155,6 +155,7 @@ def dosyaGezgini(yerel_banka_entry, label_name): # kısım4
 
 
 def bankaOlustur(master, isim, entry_name, yerel_banka_entry):
+    print("isim:", isim)
     filename = kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
     file_exists = os.path.exists("kelime_bankalari/"+filename+".txt") # dosyanın var olup olmadığına bakıyor ama çalışmıyor
@@ -232,6 +233,11 @@ def bankaSecimPenceresi():
     yerel_banka_ismi.grid(column=0, row=0, pady=5)
     yerel_banka_ismi_entry.grid(column=1, row=0, pady=7, padx=5)
     bankaOlusturButonu.grid(column=1, pady=5, padx=7, sticky=E)
+    yerel_banka_ismi_entry.bind('<Return>', lambda event: bankaOlustur(
+                                                   master=bankaSecimPenceresi,
+                                                   isim=yerel_banka_ismi_entry.get(),
+                                                   entry_name=yerel_banka_ismi_entry,
+                                                   yerel_banka_entry=yerel_banka_bul_entry))
 
     butonFrame.place(x=50, y=40)
 

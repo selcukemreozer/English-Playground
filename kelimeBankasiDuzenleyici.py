@@ -37,7 +37,7 @@ def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label):
         else:
             dosya = open(dosyaAdi, 'a')
             dosya.write(kelime)
-            label.config(text=eklenen_kelime)
+            label.config(text=("eklenen kelime >> " + ing_kelime + " : " + turkce_karsiligi))
             dosya.close()
 
     else:
@@ -53,6 +53,14 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
         ingilizceKelime.delete(0, END)
         turkceKarsiligi.delete(0, END)
         kelimesayiList.append(1)
+
+    def hepsiBirFonksiyon(event=None): # entry icin gerekli tüm fonksiyonları bir fonksiyonda topladım
+        kelimeBankasiGuncelle(isim, ingilizceKelime.get(), turkceKarsiligi.get(), label=eklenenKelimeLabel)
+        multiTaskFunc()
+        ingilizceKelime.focus_set()
+
+    def inglizceKelimeEntryFunc(event=None):
+        turkceKarsiligi.focus_set()
 
     def pencere_kapat(senaryo="iptal"):
         if senaryo == "kaydet" and len(kelimesayiList) >= 4:
@@ -90,15 +98,11 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
 
     dosya_ismi = Label(pencere, text="dosya ismi:"+isim, font=("Arial", 12))
     eklenenKelimeLabel = Label(pencere, text="", font=("Arial", 11, "italic"))
-    ekle_tusu = Button(pencere, text="Ekle",
-                       command=lambda: [kelimeBankasiGuncelle(isim, ingilizceKelime.get(),
-                                        turkceKarsiligi.get(), label=eklenenKelimeLabel),
-                                        multiTaskFunc()])
+    ekle_tusu = Button(pencere, text="Ekle", command=hepsiBirFonksiyon)
 
     kaydet_tusu = Button(pencere, text= "Kaydet",
                          command=lambda: pencere_kapat(senaryo="kaydet"))
 
-    # iptal_tusu = Button(pencere, text="iptal", command=pencere_kapat)
     ingLabel = Label(pencere, text="İngilizce Kelime", font=("Arial", 11, "italic"))
     trLabel = Label(pencere, text="Türkçe karşılığı", font=("Arial", 11, "italic"))
     ingilizceKelime = Entry(pencere)
@@ -112,19 +116,13 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     eklenenKelimeLabel.grid(column=0, row=3)
     ekle_tusu.grid(column=1, row=3, pady=7)
     kaydet_tusu.grid(column=1, row=4)
+    turkceKarsiligi.bind('<Return>', hepsiBirFonksiyon)
+    ingilizceKelime.bind('<Return>', inglizceKelimeEntryFunc)
+    ingilizceKelime.focus_set() # pencere açıldığında imleç direkt <entry>e gidiyor. Fare kullanımına gerek kalmıyor
     # iptal_tusu.place(x=400, y=170)
 
     pencere.grab_set()
     pencere.protocol('WM_DELETE_WINDOW', pencere_kapat) # iptal tuşuyla değil de [X] tuşuyla kapatırsa
     # oluşturulan <txt> dosyasının silinmesini sağlıyor
 
-"""    
-    pencere = Tk()
-    pencere.geometry("500x300")
-    pencere.title("Kelime Bankası ")
-    pencere.title("Kelime Bankası Düzenleyici")
-    ingilizceKelime = Entry()
-    pencere.columnconfigure(0, weight=1)
-    pencere.columnconfigure(1, weight=1)
-"""
 
