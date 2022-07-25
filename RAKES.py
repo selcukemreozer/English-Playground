@@ -158,12 +158,9 @@ def bankaOlustur(master, isim, entry_name, yerel_banka_entry):
     print("isim:", isim)
     filename = kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
+    yerel_banka_entry.delete(0, END)
+    yerel_banka_entry.insert(0, filename)
     file_exists = os.path.exists("kelime_bankalari/"+filename+".txt") # dosyanın var olup olmadığına bakıyor ama çalışmıyor
-
-    if filename != "" and file_exists:
-        yerel_banka_entry.insert(0, filename)
-    else:
-        pass
 
 def bankaSecimPenceresi():
     global hata
