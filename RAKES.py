@@ -52,9 +52,11 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
         elif tip == "yerel":
             if os.path.exists("kelime_bankalari/"+kelime_bankasi_ismi+".txt") or os.path.exists(kelime_bankasi_ismi):
                 if kelime_bankasi_ismi[0] != "C": # kısım4
-                    results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "r+", encoding="utf-8")
+                    results = open("kelime_bankalari/"+kelime_bankasi_ismi+".txt", "rt", encoding="cp1254")
+                    # encoding="cp1254" kullanma sebebim türkçe karakter sıkıntısı çekmek
+                    # https://stackoverflow.com/questions/62809169/how-to-read-turkish-chars-from-txt-file-in-python
                 elif kelime_bankasi_ismi[0] == "C":
-                    results = open(kelime_bankasi_ismi, "r+", encoding="utf-8")
+                    results = open(kelime_bankasi_ismi, "r+", encoding="cp1254")
                 tum_kelimeler = results.read()
 
                 if tum_kelimeler[-1] == "|": # str sonundaki eleman <"|"> ise hata çıkmaması için sondaki <"|"> kaldırıyor
