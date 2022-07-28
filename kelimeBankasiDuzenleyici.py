@@ -1,13 +1,15 @@
 from tkinter import messagebox
 from tkinter import *
 import os
+def kelimeBankasiDuzenle(master, isim):
+    bankaKelimeEklemePenceresi(master=master, isim=isim, type="eski")
 
 def kelimeBankasiOlustur(master, isim):
     if isim.replace(" ", "") != "":
         dosyaAdi = "kelime_bankalari/" + isim + ".txt"
         try:
             open(dosyaAdi, 'x')
-            yeniBankaKelimeEklemePenceresi(master=master, isim=isim)
+            bankaKelimeEklemePenceresi(master=master, isim=isim)
             return isim
 
         except FileExistsError:
@@ -23,9 +25,13 @@ def kelimeBankasiOlustur(master, isim):
         return "" # none değeri hataya sebep oluyor
 
 
-def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label):
+def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label, type="yeni"):
     if ing_kelime != '' and turkce_karsiligi != '':
-        dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+
+        if type == "yeni":
+            dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+        else:
+            dosyaAdi = isim
         dosya = open(dosyaAdi, 'r')
         eklenen_kelime = "eklenen kelime >> " + ing_kelime + " : " + turkce_karsiligi
         kelime = ing_kelime + "^" + turkce_karsiligi + "|"
@@ -44,7 +50,7 @@ def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label):
         messagebox.showwarning(title="Uyarı!", message="Lütfen kutuları boş bırakmayın.")
 
 
-def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pencere oluşturmak yerine
+def bankaKelimeEklemePenceresi(master, isim, type): # burada bağımsız bir pencere oluşturmak yerine
     # alt pencere oluşturuyor. Bu sayede <yeniBankaKelimeEklemePenceresi> açıkkan <master> pencerede
     # işlem yapılamayacak. Birçok hatanın önüne geçilecek.
     kelimesayiList = list()
@@ -55,7 +61,7 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
         kelimesayiList.append(1)
 
     def hepsiBirFonksiyon(event=None): # entry icin gerekli tüm fonksiyonları bir fonksiyonda topladım
-        kelimeBankasiGuncelle(isim, ingilizceKelime.get(), turkceKarsiligi.get(), label=eklenenKelimeLabel)
+        kelimeBankasiGuncelle(isim, ingilizceKelime.get(), turkceKarsiligi.get(), label=eklenenKelimeLabel, type=type)
         multiTaskFunc()
         ingilizceKelime.focus_set()
 
@@ -63,7 +69,12 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
         turkceKarsiligi.focus_set()
 
     def pencere_kapat(senaryo="iptal"):
-        if senaryo == "kaydet" and len(kelimesayiList) >= 4:
+        if senaryo == "kaydet" and len(kelimesayiList) >= 4 and type=="yeni":
+            messagebox.showinfo("Kaydedildi", "Dosya başarıyla kaydedildi")
+            pencere.grab_release()
+            pencere.destroy()
+
+        elif senaryo == "kaydet" and type != "yeni":
             messagebox.showinfo("Kaydedildi", "Dosya başarıyla kaydedildi")
             pencere.grab_release()
             pencere.destroy()
@@ -75,15 +86,16 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
             )
 
             if yesNo:
-                dosyaAdi = "kelime_bankalari/" + isim + ".txt"
-                os.remove(dosyaAdi) # kullanıcı kaydetmek yerine kapatırsa oluşturulan dosya silinecek
+                if type == "yeni": # dosya yeni oluşturuluyorsa silecek. Düzenlenen dosyaları silmeyecek
+                    dosyaAdi = "kelime_bankalari/" + isim + ".txt"
+                    os.remove(dosyaAdi) # kullanıcı kaydetmek yerine kapatırsa oluşturulan dosya silinecek
                 pencere.grab_release()
                 pencere.destroy()
             else:
                 pass
 
 
-        elif len(kelimesayiList) < 4:
+        elif len(kelimesayiList) < 4 and type == "yeni":
             message = "En az " + str(4 - len(kelimesayiList)) + " daha kelime eklemeniz lazım!"
             messagebox.showwarning(title="Uyarı",
                                   message=message)
@@ -96,7 +108,7 @@ def yeniBankaKelimeEklemePenceresi(master, isim): # burada bağımsız bir pence
     pencere.columnconfigure(0, weight=1)
     pencere.columnconfigure(1, weight=1)
 
-    dosya_ismi = Label(pencere, text="dosya ismi:"+isim, font=("Arial", 12))
+    dosya_ismi = Label(pencere, text="dosya ismi:"+isim[len(isim)-15:], font=("Arial", 12))
     eklenenKelimeLabel = Label(pencere, text="", font=("Arial", 11, "italic"))
     ekle_tusu = Button(pencere, text="Ekle", command=hepsiBirFonksiyon)
 

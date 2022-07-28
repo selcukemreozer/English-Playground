@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests as rq
 import random as rd
 from kelimeBankasiDuzenleyici import kelimeBankasiOlustur
+from kelimeBankasiDuzenleyici import kelimeBankasiDuzenle
 from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
@@ -149,15 +150,21 @@ def yardim():
 def dosyaGezgini(yerel_banka_entry, label_name): # kısım4
     filename = filedialog.askopenfilename(initialdir="/kelime_bankalari",
                                           title="Dosya Seç",
-                                          filetypes=(("Text Files", "*.txt*"), ("all files", "*.*")))
-    print(filename)
+                                          filetypes=(("Text Files", "*.txt*"), ("All Files", "*.*")))
+
     label_name.config(text=filename.split("/")[-1])
     yerel_banka_entry.delete(0, END)
     yerel_banka_entry.insert(0, filename)
 
+def dosyaGezgini2(master):
+    filename = filedialog.askopenfilename(initialdir="/kelime_bankalari",
+                                          title="Dosya Seç",
+                                          filetypes=(("Text Files", "*.txt*"), ("All Files", "*.*")))
+
+    kelimeBankasiDuzenle(master=master, isim=filename)
+
 
 def bankaOlustur(master, isim, entry_name, yerel_banka_entry):
-    print("isim:", isim)
     filename = kelimeBankasiOlustur(master=master, isim=isim)
     entry_name.delete(0, END)
     yerel_banka_entry.delete(0, END)
@@ -183,7 +190,7 @@ def bankaSecimPenceresi():
     butonFrame = LabelFrame(bankaSecimPenceresi, text="Hazır Kelime Bankaları", font=("Arial", 14))
 
     a1Buton = Button(butonFrame, text="a1", font=("Arial", 20),
-                     command=lambda: [soruPenceresi("yerel", "beta"), QUIT()])
+                     command=lambda: [soruPenceresi("hazir", "a1"), QUIT()])
 
     a2Buton = Button(butonFrame, text="a2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "a2"), QUIT()])
@@ -199,7 +206,7 @@ def bankaSecimPenceresi():
 
     c2Buton = Button(butonFrame, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
-
+    ##
     bankaOlusturCercevesi = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
     yerel_banka_ismi_entry = Entry(bankaOlusturCercevesi, width=20)
     yerel_banka_ismi = Label(bankaOlusturCercevesi, text="dosya adı:", font=("Arial", 12, "italic"))
@@ -208,7 +215,7 @@ def bankaSecimPenceresi():
                                                              isim=yerel_banka_ismi_entry.get(),
                                                              entry_name=yerel_banka_ismi_entry,
                                                              yerel_banka_entry=yerel_banka_bul_entry))
-
+    ##
     yerelBankaCalistirCercevesi = LabelFrame(bankaSecimPenceresi, text='Yerel Banka ile Çalış', font=('Arial', 14))
     yerel_banka_bul_entry = Entry(yerelBankaCalistirCercevesi, width=20)
     dosyaAdiLabel = Label(yerelBankaCalistirCercevesi, text="", font=("Arial", 10, "italic"))
@@ -220,7 +227,13 @@ def bankaSecimPenceresi():
 
     yardimButon = Button(bankaSecimPenceresi, text="?", font=("Arial", 10, ["bold", "italic"]), height=5,
                          command=yardim)
+    ##
+    varOlanBankaDuzenleCercevesi = LabelFrame(bankaSecimPenceresi, text='Var Olan Bankayı Düzenle', font=('Arial',14))
+    metin = Label(varOlanBankaDuzenleCercevesi, text="Ekleme yapmak istediğiniz dosyayı seçiniz", font=('Arial', 10, 'italic'))
+    gozatButon2 = Button(varOlanBankaDuzenleCercevesi, text="Gözat", font=("Arial", 13, "italic"), width=13,
+                         command=lambda: dosyaGezgini2(master=bankaSecimPenceresi))
 
+    butonFrame.place(x=50, y=40)
     a1Buton.grid(column=0, row=0, padx=20, pady=10)
     a2Buton.grid(column=1, row=0, padx=20, pady=10)
     b1Buton.grid(column=0, row=1, padx=20, pady=10)
@@ -238,14 +251,16 @@ def bankaSecimPenceresi():
                                                    entry_name=yerel_banka_ismi_entry,
                                                    yerel_banka_entry=yerel_banka_bul_entry))
 
-    butonFrame.place(x=50, y=40)
-
-    yerelBankaCalistirCercevesi.place(x=300, y=200)
+    yerelBankaCalistirCercevesi.place(x=300, y=190)
     yerel_banka_bul_entry.grid(column=0, row=0, pady=5)
     dosyaAdiLabel.grid(column=0, row=1, padx=5)
     yerelBankaAcButon.grid(column=1, row=1, padx=5, pady=5)
     gozatButon.grid(column=1, row=0)
-    yardimButon.place(x=533, y=210)
+    yardimButon.place(x=533, y=200)
+
+    varOlanBankaDuzenleCercevesi.place(x=300, y=340)
+    gozatButon2.grid()
+    metin.grid()
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
@@ -357,7 +372,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
                     # +"\n"+kelimeBankasi[0]+"\n"+kelimeBankasi[1]
             # print(type(mesaj))
             # messagebox.showinfo(title='Başardın!', message=str(kelimeBankasi)) # fazladan pencere açıyor!
-            soruPenceresiMessage('Başardın!')
+            soruPenceresiMessage()
             try:
                 soruPenceresi.destroy()
             except:
@@ -412,19 +427,19 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         soonLabel.grid(column=1, row=0)
         paket()
 
-        def soruPenceresiMessage(type):
+        def soruPenceresiMessage():
             w = Tk()
             w.withdraw() # <messagebox> penceresiz açılmıyor o yüzden penceresi olmadığında kendi küçük pencerisini
                          # oluşturuyor. Bunu engellemek için yeni bir pencere oluşturup <withdraw()> ile onu gizledim.
-            if type == "Başardın!":
-                message = "kalan kelimeler:\n\n"
 
-                for each in kelimeBankasi:
-                    word1, word2 = each.split('^')
-                    message += (word1 + " >> "+ word2 + "\n")
+            message = "kalan kelimeler:\n\n"
 
-                messagebox.showinfo(title='Başardın!', message=message)
-                w.destroy()
+            for each in kelimeBankasi:
+                word1, word2 = each.split('^')
+                message += (word1 + " >> "+ word2 + "\n")
+
+            messagebox.showinfo(title='Başardın!', message=message)
+            w.destroy()
 
     else:
         pass
