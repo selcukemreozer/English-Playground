@@ -256,6 +256,7 @@ def bankaSecimPenceresi():
     dosyaAdiLabel.grid(column=0, row=1, padx=5)
     yerelBankaAcButon.grid(column=1, row=1, padx=5, pady=5)
     gozatButon.grid(column=1, row=0)
+    yerel_banka_bul_entry.bind("<Return>", lambda event:[soruPenceresi("yerel", yerel_banka_bul_entry.get()), QUIT()])
     yardimButon.place(x=533, y=200)
 
     varOlanBankaDuzenleCercevesi.place(x=300, y=340)
@@ -366,13 +367,9 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
                 # ataması gerçekleşiyor
 
         elif hata and len(kelimeBankasi) == 3:
-            print(kelimeBankasi)
             kelimeBankasi.remove(silinecekEleman) # bilinen son kelimeyi siliyor
-            # mesaj = "kelime bankasını başarıyla tamamladınız.\nKalan kelimeler:"\
-                    # +"\n"+kelimeBankasi[0]+"\n"+kelimeBankasi[1]
-            # print(type(mesaj))
-            # messagebox.showinfo(title='Başardın!', message=str(kelimeBankasi)) # fazladan pencere açıyor!
             soruPenceresiMessage()
+
             try:
                 soruPenceresi.destroy()
             except:
@@ -436,7 +433,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
 
             for each in kelimeBankasi:
                 word1, word2 = each.split('^')
-                message += (word1 + " >> "+ word2 + "\n")
+                message += (word1 + " >> " + word2 + "\n")
 
             messagebox.showinfo(title='Başardın!', message=message)
             w.destroy()

@@ -33,8 +33,7 @@ def kelimeBankasiGuncelle(isim, ing_kelime, turkce_karsiligi, label, type="yeni"
         else:
             dosyaAdi = isim
         dosya = open(dosyaAdi, 'r')
-        eklenen_kelime = "eklenen kelime >> " + ing_kelime + " : " + turkce_karsiligi
-        kelime = ing_kelime + "^" + turkce_karsiligi + "|"
+        kelime = ing_kelime.replace("|", "*").replace("^", "*") + "^" + turkce_karsiligi.replace("|", "*").replace("^", "*") + "|"
         icerik = dosya.read()
         dosya.close()
         if kelime in icerik: # aynı kelimenin eklenmesini engelliyor
