@@ -22,9 +22,14 @@ __Çalışma Mantığı:__ Araç, seçtiğiniz seviyeye göre hazırda bulunan k
 	- [ ] c1 
 	- [ ] c2
 	
-- [ ] Kullanıcının kendi kelime bankasını oluşturabilmesi 
-    - [ ] ve yerel hafızada tutabilmesi  
+- [x] Kullanıcının kendi kelime bankasını oluşturabilmesi 
+    - [x] ve yerel hafızada tutabilmesi  
     - [ ] ve sisteme yükleyebilmesi
 - [ ] puanlama sistemi geliştir
 - [ ] kelimeler için örnek cümle özelliği
-- [ ] kelime sorucu sorduğu kelimeyi(kullanıcı doğru bilirse) tekrar sormasın
+- [x] kelime sorucu sorduğu kelimeyi(kullanıcı doğru bilirse) tekrar sormasın
+- [x] Kalan kelimelerin sayısıb-nı gösteren kelime sayacı
+- [ ] Var olan kelime bankalarına müdahale
+	- [x] kelime ekleme
+	- [ ] kelime çıkarma
+	- [ ] kelimelerin hepsini tek sayfada görüntüleyebilme
