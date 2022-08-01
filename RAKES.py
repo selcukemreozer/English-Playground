@@ -303,6 +303,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
                     dogruYanlis.config(text = "BRAVO!", bg = '#2EFE2E')
                     print(f"silinecek eleman_:{silinecekEleman}")
                     kelimeBankasi.remove(silinecekEleman) # kullanıcı doğru cevap verirse kelşme geçici bankadan silinir
+                    kalanKelimeLabel.config(text="Kalan Kelime:"+str(len(kelimeBankasi)))
                 elif configKontrolcu:
                     if oncekiDogruCevap != "": # değişkene kısım3'te <""> değeri atanıyor o yüzden kırmızı bir çizgi
                         # oluşmasını engellemek için bu if koşulu kullanılıyor
@@ -389,16 +390,17 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         soruPenceresi = Tk()
         soruPenceresi.resizable(False, False)
         soruPenceresi.title('RAKES')
-        soruPenceresi.geometry('1200x400+360+290')
+        soruPenceresi.geometry('1200x350+360+265')
         soruPenceresi.columnconfigure(0, weight=1)
         soruPenceresi.columnconfigure(1, weight=1)
         soruPenceresi.columnconfigure(2, weight=1)
 
         soru = Label(soruPenceresi, text="", bg="white", anchor=CENTER, font=("Arial", 25))
+        kalanKelimeLabel = Label(soruPenceresi, text="Kalan Kelime:"+str(len(kelimeBankasi)), anchor=CENTER, font=("Arial", 15))
         soru.grid(column=0, row=0, padx=30, pady=30)
 
         dogruYanlis = Label(soruPenceresi, text="", font=("Arial", 15))
-        dogruYanlis.grid(column=0, row=1, padx=20, pady=20)
+
 
         buton1 = Button(soruPenceresi, text="", height=1, width=30, font=("Arial", 20),
                         command = lambda: paket(1))
@@ -411,11 +413,13 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
         anaMenuButonu = Button(soruPenceresi, text="Ana Menü", height=1, width=8, font=("Arial", 12),
                         command=lambda: [soruPenceresi.destroy(), bankaSecimPenceresi(), deleter()])
 
-        buton1.grid(column=0, row=2)
-        buton2.grid(column=0, row=3)
-        buton3.grid(column=0, row=4)
-        cikisButonu.place(x=451, y=350)
-        anaMenuButonu.place(x=366, y=350)
+        kalanKelimeLabel.place(x=10, y=10)
+        buton1.grid(column=0, row=1)
+        buton2.grid(column=0, row=2)
+        buton3.grid(column=0, row=3)
+        dogruYanlis.place(x=80, y=300)
+        cikisButonu.place(x=1051, y=300)
+        anaMenuButonu.place(x=966, y=300)
 
         soonLabel = Label(soruPenceresi, text="Örnek cümle özelliği çok yakında!", font=("Arial", 13))
         # https://wordsinasentence.com/
