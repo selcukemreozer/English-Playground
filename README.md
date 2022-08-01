@@ -28,7 +28,7 @@ __Çalışma Mantığı:__ Araç, seçtiğiniz seviyeye göre hazırda bulunan k
 - [ ] puanlama sistemi geliştir
 - [ ] kelimeler için örnek cümle özelliği
 - [x] kelime sorucu sorduğu kelimeyi(kullanıcı doğru bilirse) tekrar sormasın
-- [x] Kalan kelimelerin sayısıb-nı gösteren kelime sayacı
+- [x] Kalan kelimelerin sayısını gösteren kelime sayacı
 - [ ] Var olan kelime bankalarına müdahale
 	- [x] kelime ekleme
 	- [ ] kelime çıkarma
