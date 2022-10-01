@@ -9,7 +9,7 @@ def kelimeBankasiOlustur(master, isim):
         dosyaAdi = "kelime_bankalari/" + isim + ".txt"
         try:
             open(dosyaAdi, 'x')
-            bankaKelimeEklemePenceresi(master=master, isim=isim)
+            bankaKelimeEklemePenceresi(master=master, isim=isim, type="yeni")
             return isim
 
         except FileExistsError:
@@ -107,7 +107,11 @@ def bankaKelimeEklemePenceresi(master, isim, type): # burada bağımsız bir pen
     pencere.columnconfigure(0, weight=1)
     pencere.columnconfigure(1, weight=1)
 
-    dosya_ismi = Label(pencere, text="dosya ismi:"+isim[len(isim)-15:], font=("Arial", 12))
+    if len(isim) > 15:
+        dosya_ismi = Label(pencere, text="dosya ismi:" + isim[:16]+"...", font=("Arial", 12))
+    else:
+        dosya_ismi = Label(pencere, text="dosya ismi:"+isim, font=("Arial", 12))
+
     eklenenKelimeLabel = Label(pencere, text="", font=("Arial", 11, "italic"))
     ekle_tusu = Button(pencere, text="Ekle", command=hepsiBirFonksiyon)
 
