@@ -137,7 +137,7 @@ def secenekBelirleyici(kelimeBankasi):
         else:
             break
 
-    print(f"silinecek eleman:{secim_}")
+    # print(f"silinecek eleman:{secim_}")
     return [ingilizceKelime, turkcesi, digerSecenek1, digerSecenek2, secim_]
 ####################################################################
 
@@ -301,7 +301,7 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
             try:
                 if butonHafiza == cevap_butonNo and configKontrolcu:
                     dogruYanlis.config(text = "BRAVO!", bg = '#2EFE2E')
-                    print(f"silinecek eleman_:{silinecekEleman}")
+                    # print(f"silinecek eleman_:{silinecekEleman}")
                     kelimeBankasi.remove(silinecekEleman) # kullanıcı doğru cevap verirse kelşme geçici bankadan silinir
                     kalanKelimeLabel.config(text="Kalan Kelime:"+str(len(kelimeBankasi)))
                 elif configKontrolcu:
@@ -310,12 +310,12 @@ def soruPenceresi(tip, kelimeBankasi_ismi):
                         dogruYanlis.config(text = oncekiDogruCevap, bg = '#FA5858') # FE2E2E FF4000
                 else:
                     pass
-                print(len(kelimeBankasi))
+                # print(len(kelimeBankasi))
             except NameError:
                 butonHafiza = -1
 
             secenekler = secenekBelirleyici(kelimeBankasi)
-            print(kelimeBankasi)
+            # print(kelimeBankasi)
             dogruCevap = secenekler[1]
             secenek1 = secenekler[2].split('^')[1]
             secenek2 = secenekler[3].split('^')[1]
