@@ -142,6 +142,11 @@ def secenekBelirleyici(kelimeBankasi):
 ####################################################################
 
 ########################       tkinter      ########################
+def infoButton():
+    message = "Geliştirici: S.Emre Özer\n"\
+              "Versiyon: v1.0\n"\
+              "RAKES, ingilizce öğrenmek isteyenlere yardımcı olmak için geliştirilmiş ücretsiz bir programdır."
+    messagebox.showinfo(title="Hakkında", message=message)
 def yardim():
     message = "Dosyanın direkt adını yazıp çalıştırabilirsiniz." \
               " Eğer bu işe yaramazsa ya da dosyanın adını tam bilmiyorsanız <Gözat> butonunu kullanabilirsiniz."
@@ -206,6 +211,8 @@ def bankaSecimPenceresi():
 
     c2Buton = Button(butonFrame, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
+    haftaninButonu = Button(bankaSecimPenceresi, text="Haftanın Kelimeleri", font=("Arial", 17),
+                     command=lambda: [soruPenceresi("hazir", "haftanin_kelimeleri")])
     ##
     bankaOlusturCercevesi = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
     yerel_banka_ismi_entry = Entry(bankaOlusturCercevesi, width=20)
@@ -232,7 +239,9 @@ def bankaSecimPenceresi():
     metin = Label(varOlanBankaDuzenleCercevesi, text="Ekleme yapmak istediğiniz dosyayı seçiniz", font=('Arial', 10, 'italic'))
     gozatButon2 = Button(varOlanBankaDuzenleCercevesi, text="Gözat", font=("Arial", 13, "italic"), width=13,
                          command=lambda: dosyaGezgini2(master=bankaSecimPenceresi))
-
+    ##
+    info_button = Button(bankaSecimPenceresi, text="Hakkında", font=('Italic', 10),
+                        command=infoButton)
     butonFrame.place(x=50, y=40)
     a1Buton.grid(column=0, row=0, padx=20, pady=10)
     a2Buton.grid(column=1, row=0, padx=20, pady=10)
@@ -240,6 +249,7 @@ def bankaSecimPenceresi():
     b2Buton.grid(column=1, row=1, padx=20, pady=10)
     c1Buton.grid(column=0, row=2, padx=20, pady=10)
     c2Buton.grid(column=1, row=2, padx=20, pady=10)
+    haftaninButonu.place(x=47, y=310)
 
     bankaOlusturCercevesi.place(x=300, y=40)
     yerel_banka_ismi.grid(column=0, row=0, pady=5)
@@ -262,6 +272,7 @@ def bankaSecimPenceresi():
     varOlanBankaDuzenleCercevesi.place(x=300, y=340)
     gozatButon2.grid()
     metin.grid()
+    info_button.place(x=490, y=450)
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 def deleter(): # ana menuya dönüp geri geldiğinde önceki doğru cevap değişiyordu o yüzden <deleter()> fonksiyonu
