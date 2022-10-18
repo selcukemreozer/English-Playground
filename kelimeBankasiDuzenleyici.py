@@ -95,7 +95,7 @@ def bankaKelimeEklemePenceresi(master, isim, type): # burada bağımsız bir pen
 
 
         elif len(kelimesayiList) < 4 and type == "yeni":
-            message = "En az " + str(4 - len(kelimesayiList)) + " daha kelime eklemeniz lazım!"
+            message = "En az " + str(4 - len(kelimesayiList)) + " kelime daha eklemeniz lazım!"
             messagebox.showwarning(title="Uyarı",
                                   message=message)
 

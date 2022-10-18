@@ -38,7 +38,15 @@ def RAKES_bankaDuzenleyici(tip, kelime_bankasi_ismi):
                         if results[each2 + each] == "<":
                             tum_kelimeler = results[each + 1:each2 + each]  # tüm ing ve tr kelimeler str halinde tek parça
                             # her kelimenin ing ve trsi bir eleman olacak şekilde  listeleme
+
+                            if tum_kelimeler[-1] == "|":
+                                tum_kelimeler = tum_kelimeler[:-1]
+                                # bu <if> sonradan eklendi. Herhangi bir hataya sebep olması çok olası
+                                # kelimeBankasiDuzenleyici > kelimeBankasiGuncelle() fonksiyonu her bir kelime
+                                # eklediğinde sona "|" karakterini koyuyor. Bundan kaynaklı hatayı engellemek için <if>
+                                # eklendi.
                             break
+
                     break
 
                 elif each == len(results)-1:
@@ -212,7 +220,7 @@ def bankaSecimPenceresi():
     c2Buton = Button(butonFrame, text="c2", font=("Arial", 20),
                      command=lambda: [soruPenceresi("hazir", "c2"), QUIT()])
     haftaninButonu = Button(bankaSecimPenceresi, text="Haftanın Kelimeleri", font=("Arial", 17),
-                     command=lambda: [soruPenceresi("hazir", "haftanin_kelimeleri")])
+                     command=lambda: [soruPenceresi("hazir", "haftanin_kelimeleri"), QUIT()])
     ##
     bankaOlusturCercevesi = LabelFrame(bankaSecimPenceresi, text='Kelime Bankası Oluştur', font=('Arial', 14))
     yerel_banka_ismi_entry = Entry(bankaOlusturCercevesi, width=20)
